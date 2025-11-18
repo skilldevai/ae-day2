@@ -298,7 +298,7 @@ Try these challenges:
 </br></br>
 
 
-# Lab #2 - Prompt Engineering: Advanced Techniques for Product Review Analysis**
+# Lab #2 - Prompt Engineering: Advanced Techniques for Product Review Analysis
 
 **Purpose: Learn how different prompting strategies dramatically affect model accuracy and consistency by analyzing product reviews. This lab demonstrates key prompt engineering techniques including role-based prompting, chain-of-thought reasoning, structured templates, and meta-prompting for real-world sentiment analysis.
 
@@ -589,7 +589,7 @@ python simple_ollama.py
 </br></br>
 
 
-# Lab #4 - Creating Your Own Intelligence Br**
+# Lab #4 - Creating Your Own Intelligence Briefing
 
 **Purpose: Use AI to help keep you up-to-date on AI.**
 
