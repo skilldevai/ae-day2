@@ -261,58 +261,12 @@ Be specific about which approach and explain the reasoning."
 
 <br><br>
 
-## 8. Key Takeaways and Summary
-
-Review what you've learned:
-
-| Discipline | Primary Question | Approach | Color in Lab |
-|------------|-----------------|----------|--------------|
-| **Data Science** | "What happened and why?" | Statistics, analysis, visualization | 
-| **Traditional AI** | "Apply logical rules" | Human-coded if-then logic | 
-| **Machine Learning** | "What will happen?" | Learn patterns from data | 
-| **Deep Learning** | "Understand complex patterns" | Neural networks, multi-layer learning | 
-| **Generative AI** | "Create something new" | Generate novel content |
-
-### The Hierarchy:
-```
-Artificial Intelligence (AI) - Broadest concept
-├── Traditional AI (Rule-based systems)
-└── Machine Learning (Learning from data)
-    └── Deep Learning (Neural networks with multiple layers)
-        └── Generative AI (Creating new content)
-
-Data Science - Separate but overlapping discipline
-└── Uses tools from AI/ML/DL/statistics for insights
-```
-
-### Key Differences:
-
-1. **Data Science** is about **insight extraction** - understanding data through analysis
-2. **Traditional AI** is about **codified intelligence** - following human-defined rules
-3. **Machine Learning** is about **pattern recognition** - learning to predict from data
-4. **Deep Learning** is about **complex pattern understanding** - using neural networks for unstructured data
-5. **Generative AI** is about **content creation** - producing new, original outputs
-
-### When to Use Each:
-
-- **Data Science**: When you need to understand "what happened" and extract insights
-- **Traditional AI**: When you have clear, consistent rules and logic to follow
-- **Machine Learning**: When you need to predict future outcomes from structured data
-- **Deep Learning**: When working with unstructured data (images, text, audio, video)
-- **Generative AI**: When you need to create new content, designs, or solutions
-
-### Important Notes:
-
-- These disciplines **overlap significantly** in practice
-- Most modern systems **combine multiple approaches**
-- The boundaries are **fluid** - a data scientist might use ML, ML engineers use data science techniques
-- **Generative AI** (like ChatGPT, Llama) is the newest evolution, but not always the best tool
 
 <br><br>
 
 ## Bonus: Test Your Understanding
 
-Try these challenges (switch colors as you go!):
+Try these challenges:
 
 1. **Your task**: Identify duplicate customer records in a database
    - **Which approach?** (Hint: Think about rules vs learning)
