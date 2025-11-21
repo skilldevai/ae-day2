@@ -233,6 +233,287 @@ python vectors.py bert-base-cased 768
 </p>
 </br></br>
 
+**Lab 4 - Working with transformer models**
+
+**Purpose: In this lab, we’ll see how to interact with various models for different standard tasks**
+
+1. In our repository, we have several different Python programs that utilize transformer models for standard types of LLM tasks. One of them is a simple translation example. The file name is *translation.py*. Open the file either by clicking on [**genai/translation.py**](./genai/translation.py) or by entering the command below in the codespace's terminal.
+
+```
+code translation.py
+```
+2. Take a look at the file contents.  Notice that we are pulling in a specific model ending with 'en-fr'. This is a clue that this model is trained for English to French translation. Let's find out more about it. In a browser, go to *https://huggingface.co/models* and search for the model name 'Helsinki-NLP/opus-mt-en-fr' (or you can just go to huggingface.co/Helsinki-NLP/opus-mt-en-fr).
+![model search](./images/gaidd26.png?raw=true "model search")
+
+3. You can look around on the model card for more info about the model. Notice that it has links to an *OPUS readme* and also links to download its original weights, translation test sets, etc.
+
+4. When done looking around, go back to the repository and look at the rest of the *translation.py* file. What we are doing is loading the model, the tokenizer, and then taking a set of random texts and running them through the tokenizer and model to do the translation. Go ahead and execute the code in the terminal via the command below.
+```
+python translation.py
+```
+![translation by model](./images/gaidd41.png?raw=true "translation by model")
+ 
+5. There's also an example program for doing classification. The file name is classification.py. Open the file either by clicking on [**genai/classification.py**](./genai/classification.py) or by entering the command below in the codespace's terminal.
+
+```
+code classification.py
+```
+6. Take a look at the model for this one *joeddav/xlm-roberta-large-xnli* on huggingface.co and read about it. When done, come back to the repo.
+
+7. *classification.py* uses a HuggingFace pipeline to do the main work. Notice it also includes a list of categories as *candidate_labels* that it will use to try and classify the data. Go ahead and run it to see it in action. (This will take awhile to download the model.) After it runs, you will see each topic, followed by the ratings for each category. The scores reflect how well the model thinks the topic fits a category. The highest score reflects which category the model thinks fit best.
+```
+python classification.py
+```
+![classification by model](./images/gaidd42.png?raw=true "classification by model")
+
+8. Finally, we have a program to do sentiment analysis. The file name is sentiment.py. Open the file either by clicking on [**genai/sentiment.py**](./genai/sentiment.py) or by entering the command below in the codespace's terminal.
+
+```
+code sentiment.py
+```
+
+9. Again, you can look at the model used by this one *distilbert-base-uncased-finetuned-sst-2-english* in Hugging Face.
+
+10. When ready, go ahead and run this one in the similar way and observe which ones it classified as positive and which as negative and the relative scores.
+```
+python sentiment.py
+```
+![sentiment by model](./images/gaidd43.png?raw=true "sentiment by model")
+
+11. If you're done early, feel free to change the texts, the candidate_labels in the previous model, etc. and rerun the models to see the results.
+
+<p align="center">
+**[END OF LAB]**
+</p>
+</br></br>
+
+**Lab 5 - Fine-tuning Models**
+
+**Purpose: In this lab, we'll see how we can fine-tune a model with a set of data to get better responses in a particular domain.**
+
+1. For this lab, we will build out a starter file into a full fine-tuning example. The starter file is in the ft (for "fine tuning") directory. Change into that directory.
+
+```
+cd /workspaces/aia-day1/ft
+```
+
+2. We'll be tuning a basic model from Hugging Face called Distilbert. You can see information about that model here: <insert url>.
+
+3. We'll be using that model to do sentiment analysis on Amazon product reviews. Sentiment analysis means determining if a review is positive, negative, or other - as we did with one of the examples in Lab 4. The dataset we'll be using for testing and fine-tuning is <insert data set>. You can see information about that dataset here: <insert URL>
+
+
+4. To build out this file, we'll use a side-by-side compare and merge approach. That means we'll start up an editor with a completed version of the file on the left and the starter version on the right. To do this, run the command below: (the complete code is in extra/reviews-ft.txt)
+
+```
+code -d ../extra/reviews-ft.txt reviews-ft.py
+```
+
+5. After running this command, you'll see the side-by-side editors. Now we want to merge in the sections that are in the left file into the right file to build out our demo. Before you merge in a section, make sure to glance at the block of code to try and understand what it's doing. Then, when ready, hover over the bar between the two versions and an arrow should display. Click on the arrow to merge that section in.
+
+
+6. Proceed down through the remaining differences, quickly reviewing the code to be merged, and then merging it with the arrow. Once you are done, the files should show as the same without any remaining "blocks" of differences. When done, close the diff view by clicking on the "X" in the tab at the top.
+
+
+7.  Now we can run the demo with the following command:
+
+```
+python reviews-ft.py
+```
+
+8. This will first download the Distilbert model and then run through a subset of reviews to see how well the model does (without any fine-tuning) on determining the sentiment of each review. If this goes by too fast, you can scroll back up to see the reviews and results. You will probably see something in the 30-50% success range.
+
+9. Now the model will use some Hugging Face transformer library tools to train the model from the dataset. This part will take probably as much as 5-8 minutes. What you are looking for here is the *loss value* to go down as the fine tuning proceeds. The loss value going down means that the model is getting better at predicting the sentiment as it learns from the dataset examples. 
+
+
+10. At the end of the fine-tuning, the program will once again run through a test of the model's prediction for sentiments on the reviews. This time, since it has been fine-tuned, it should report success more in the 80-90% range.
+
+<p align="center">
+**[END OF LAB]**
+</p>
+</br></br>
+
+**Lab 6 - Working with Vector Databases**
+
+**Purpose: In this lab, we’ll learn about how to use vector databases for storing supporting data and doing similarity searches.**
+
+1. For this lab and the next one, we have a data file that we'll be using that contains a list of office information and details for a ficticious company. The file is in [**data/offices.pdf**](./data/offices.pdf). You can use the link to open it and take a look at it.
+
+![PDF data file](./images/31ai23.png?raw=true "PDF data file") 
+
+2. In our repository, we have some simple tools built around a popular vector database called Chroma. There are two files which will create a vector db (index) for the *.py files in our repo and another to do the same for the office pdf. You can look at the files either via the usual "code <filename>" method or clicking on [**tools/index_code.py**](./tools/index_code.py) or [**tools/index_pdf.py**](./tools/index_pdf.py).
+
+```
+code ../tools/index_code.py
+code ../tools/index_pdf.py
+```
+
+3. Let's create a vector database of our local python files. Run the program to index those. **This may run for a while before you see things happening.** You'll see the program loading the embedding model that will turn the code chunks into numeric represenations in the vector database and then it will read and index our *.py files. It will create a new local vector database in *./chroma_db*.
+
+```
+python ../tools/index_code.py
+```
+
+![Running code indexer](./images/gaidd88.png?raw=true "Running code indexer")
+
+4. To help us do easy/simple searches against our vector databases, we have another tool at [**tools/search.py**](./tools/search.py). This tool connects to the ChromaDB vector database we create, and, using cosine similarity metrics, finds the top "hits" (matching chunks) and prints them out. You can open it and look at the code in the usual way if you want. No changes are needed to the code.
+
+```
+code ../tools/search.py
+```
+
+5. Now, let's run the search tool against the vector database we built in step 3. You can prompt it with phrases related to our coding like any of the ones shown below. When done, just type "exit".  Notice the top hits and their respective cosine similarity values. Are they close? Farther apart?
+
+```
+python ../tools/search.py
+
+convert celsius to farenheit
+embed model sentence-transformers
+```
+
+![Running search](./images/gaidd89.png?raw=true "Running search")
+
+6.  Now, let's recreate our vector database based off of the PDF file. Just run the indexer for the pdf file.
+
+```
+python ../tools/index_pdf.py
+```
+
+![Indexing PDF](./images/gaidd90.png?raw=true "Indexing PDF")
+
+7. Now, we can run the same search tool to find the top hits for information about offices. Below are some prompts you can try here. Note that in some of them, we're using keywords only found in the PDF document. Notice the cosine similarity values on each - are they close? Farther apart?  When done, just type "exit".
+
+```
+python ../tools/search.py
+
+Queries:
+Corporate Operations office
+Seaside cities
+Tech Development sites
+High revenue branch
+```
+
+![PDF search](./images/gaidd95.png?raw=true "PDF search")
+
+8. Keep in mind that this is not trying to intelligently answer your prompts at this point. This is a simple semantic search to find related chunks. In lab 8, we'll add in the LLM to give us better responses. In preparation for that lab, make sure that indexing for the PDF is the last one you ran and not the indexing for the Python files.
+
+
+<p align="center">
+**[END OF LAB]**
+</p>
+</br></br>
+
+
+**Lab 7: Building a Basic RAG System**
+
+**Purpose: In this lab, we'll create a basic RAG (Retrieval-Augmented Generation) system that can read PDF documents, store them in a vector database, and retrieve relevant information based on queries.**
+
+1. As we did before, we'll be using the side-by-side editor merge approach in this lab to build out the code with our rag functionality.
+
+2. First, let's navigate to our *rag* directory where we have the starter file and some utility files.
+
+```
+cd /workspaces/aia-day1/rag
+```
+<br><br>
+
+
+3. Now, let's examine our basic RAG implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
+
+```
+code -d ../extra/rag_complete.txt rag_code.py
+```
+<br><br>
+
+4. Once you have the diff view open, merge the code segments from the complete file (left side) into the skeleton file (right side) by clicking the arrow pointing right in the middle bar for each difference. Start with the imports section, then the document loading function, and finally the search functionality.
+
+![Side-by-side merge](../images/merge-example.png)
+<br><br>
+
+5. After merging all the changes, close the diff view by clicking the "X" in the tab. Now let's test our basic RAG system:
+
+```
+python rag_code.py
+```
+<br><br>
+
+6. The system should load the PDF documents and create the vector database. Let's now create a simple test script to query the knowledge base. Create a new file:
+
+```
+code rag_test.py
+```
+<br><br>
+
+7. Paste the following code into the rag_test.py file:
+
+```python
+from rag_skeleton import KnowledgeBase
+
+# Initialize the knowledge base
+kb = KnowledgeBase()
+
+# Test queries
+queries = [
+    "How do I return a product?",
+    "What are the shipping options?",
+    "How can I reset my password?"
+]
+
+print("Testing RAG System\n" + "="*50)
+for query in queries:
+    print(f"\nQuery: {query}")
+    results = kb.search(query, max_results=2)
+
+    for i, result in enumerate(results, 1):
+        print(f"Result {i}: {result['content'][:200]}...")
+        print(f"Category: {result['category']}, Score: {result['score']:.2f}")
+```
+<br><br>
+
+8. Save the file (CTRL/CMD + S) and run the test:
+
+```
+python rag_test.py
+```
+<br><br>
+
+9. You should see search results for each query. Notice how the system finds relevant documents based on the query content. Let's add some performance monitoring to our RAG system. Use the diff tool again:
+
+```
+code -d ../extra/rag_enhanced.txt rag_code.py
+```
+<br><br>
+
+10. Merge in the enhancements that add timing information and better logging. After merging, close the diff view.
+<br><br>
+
+11. Now let's test the enhanced version with a simple benchmark:
+
+```
+python benchmark_rag.py
+```
+<br><br>
+
+12. You should see timing information for document loading and search operations. This gives us a baseline for our RAG system performance.
+
+![RAG Performance](../images/rag-performance.png)
+<br><br>
+
+13. Finally, let's verify that our knowledge base persists correctly. Run the persistence test:
+
+```
+python test_persistence.py
+```
+<br><br>
+
+14. The test should show that documents are correctly stored and can be retrieved even after restarting the system.
+
+
+**Key Takeaways:**
+- You've built a basic RAG system that can load PDF documents
+- The system uses ChromaDB as a vector database for similarity search
+- Documents are chunked and embedded for efficient retrieval
+- The system can find relevant information based on semantic similarity
+
 <p align="center">
 <b>[END OF LAB]</b>
 </p>
