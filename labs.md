@@ -501,7 +501,11 @@ python ../tools/index_pdfs.py
 
 **Purpose: In this lab, we'll create a complete RAG (Retrieval-Augmented Generation) system that retrieves relevant context from our vector database and uses an LLM to generate intelligent, grounded answers.**
 
-1. You should still be in the *rag* subdirectory. We're going to build a TRUE RAG system that combines vector search with LLM generation. This is different from Lab 6 - instead of just finding similar chunks, we'll use those chunks as context for an LLM to generate complete answers.
+1. You should still be in the *rag* subdirectory. We're going to build a TRUE RAG system that combines vector search with LLM generation. This is different from Lab 6 - instead of just finding similar chunks, we'll use those chunks as context for an LLM to generate complete answers. First, we need to bring down a smaller model to use with these labs. Use the Ollama command below:
+
+```
+ollama pull llama3.2:1b
+```
 
 <br><br>
 
@@ -517,8 +521,8 @@ code -d ../extra/rag_complete.txt rag_code.py
 
 3. Once you have the diff view open, take a moment to look at the structure in the complete version on the left. Notice the three main methods: `retrieve()` for finding chunks, `build_prompt()` for augmenting with context, and `generate()` for calling the LLM. These are the three steps of RAG.
 
-- Lines 94-156: `retrieve()` - semantic search in ChromaDB
-- Lines 158-208: `build_prompt()` - combining context with the question
+- Lines 95-157: `retrieve()` - semantic search in ChromaDB
+- Lines 159-209: `build_prompt()` - combining context with the question
 - Lines 211-273: `generate()` - calling Ollama's Llama 3.2 model
 
 <br><br>
@@ -545,7 +549,7 @@ The system will connect to the vector database we created in Lab 6 and check if 
 
 <br><br>
 
-7. You should see knowledge base statistics showing how many chunks are indexed, and a check that Ollama is running with the llama3.2 model. If you see any errors about Ollama not running, check that with "ollama list".  If Ollama doesn't respond, try "ollama serve &".
+7. You should see knowledge base statistics showing how many chunks are indexed, and a check that Ollama is running with the llama3.2:1b model. If you see any errors about Ollama not running, check that with "ollama list".  If Ollama doesn't respond, try "ollama serve &".
 
 ![Running](./images/aia-1-45.png?raw=true "Running")
 
@@ -564,7 +568,9 @@ Watch what happens - the system will show you the three RAG steps in the logs:
 
 <br><br>
 
-9. After a few seconds, you'll see an ANSWER section with the LLM-generated response, followed by a SOURCES section showing which PDFs and pages were used. Notice how the answer is much more complete and natural than just showing search results!
+9. After a few seconds, you'll see an ANSWER section with the LLM-generated response, followed by a SOURCES section showing which PDFs and pages were used. Notice how the answer is much more complete and natural than just showing search results.
+
+![Answer](./images/aia-1-47.png?raw=true "Answer")
 
 <br><br>
 
@@ -578,6 +584,8 @@ What should I do if my device won't turn on?
 
 For each question, notice how the system retrieves relevant chunks and generates a complete answer based on that context.
 
+![Answer](./images/aia-1-46.png?raw=true "Answer")
+
 <br><br>
 
 11. Now try asking a question that's NOT in the PDFs to see how RAG handles it:
@@ -585,6 +593,8 @@ For each question, notice how the system retrieves relevant chunks and generates
 ```
 What's the CEO's favorite color?
 ```
+
+![Answer](./images/aia-1-48.png?raw=true "Answer")
 
 Notice how the system should say it doesn't have that information (rather than making something up). This is the "grounding" benefit of RAG - answers are based on actual documents.
 
@@ -594,12 +604,6 @@ Notice how the system should say it doesn't have that information (rather than m
 
 <br><br>
 
-13. (Optional) If you want to see the code in action, open the rag_code.py file and look at the three key methods:
-
-
-This is the complete RAG pipeline: **Retrieve → Augment → Generate**
-
-<br><br>
 
 **Key Takeaways:**
 - You've built a TRUE RAG system that combines vector search with LLM generation

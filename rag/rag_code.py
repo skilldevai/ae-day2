@@ -5,6 +5,7 @@ Complete RAG (Retrieval-Augmented Generation) Implementation
 """
 
 import logging
+import os
 from typing import List, Dict
 from pathlib import Path
 import requests

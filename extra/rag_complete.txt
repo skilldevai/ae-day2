@@ -32,7 +32,7 @@ logger = logging.getLogger("rag-system")
 # ═══════════════════════════════════════════════════════════════════
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")  # Set via OLLAMA_MODEL env var
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:1b")  # Set via OLLAMA_MODEL env var
 
 class RAGSystem:
     """Complete RAG system with retrieval and generation"""
@@ -199,10 +199,10 @@ USER QUESTION:
 
 INSTRUCTIONS:
 - Answer based ONLY on the context provided above
+- Provide a complete, comprehensive answer that includes ALL relevant information from the context
 - Be specific and cite which document/page the information comes from
-- If the context contains sufficient information to answer the question, provide a clear, concise answer
-- If the context does NOT contain sufficient information, respond ONLY with: "I don't have enough information in the provided documentation to answer this question."
-- Do NOT provide both an answer and then say you lack information
+- If the context does NOT contain enough information to answer the question, respond with: "I don't have enough information in the provided documentation to answer this question."
+- IMPORTANT: Do not include both an answer AND the "I don't have enough information" message - provide only one or the other
 
 ANSWER:"""
 
