@@ -13,6 +13,7 @@ Compatible with the database created by tools/index_pdfs.py
 """
 
 import logging
+import os
 from typing import List, Dict
 from pathlib import Path
 import requests
@@ -31,7 +32,7 @@ logger = logging.getLogger("rag-system")
 # ═══════════════════════════════════════════════════════════════════
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2"  # or "llama3.2:1b" for faster responses
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:3b")  # Set via OLLAMA_MODEL env var
 
 class RAGSystem:
     """Complete RAG system with retrieval and generation"""
@@ -190,8 +191,6 @@ class RAGSystem:
         # with relevant information from our knowledge base
         prompt = f"""You are a helpful assistant answering questions based on the provided documentation.
 
-Use the following context from the documentation to answer the user's question. If the context doesn't contain enough information to answer the question, say so clearly.
-
 CONTEXT FROM DOCUMENTATION:
 {context_text}
 
@@ -201,8 +200,9 @@ USER QUESTION:
 INSTRUCTIONS:
 - Answer based ONLY on the context provided above
 - Be specific and cite which document/page the information comes from
-- If the context doesn't contain the answer, say "I don't have enough information in the provided documentation to answer that."
-- Keep your answer concise and helpful
+- If the context contains sufficient information to answer the question, provide a clear, concise answer
+- If the context does NOT contain sufficient information, respond ONLY with: "I don't have enough information in the provided documentation to answer this question."
+- Do NOT provide both an answer and then say you lack information
 
 ANSWER:"""
 

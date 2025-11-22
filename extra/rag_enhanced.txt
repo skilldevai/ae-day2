@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════════════════
 
 OLLAMA_API_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3.2"  # or "llama3.2:1b" for faster responses
+OLLAMA_MODEL = "llama3.2:1b"  # The 1 billion parameter version (smaller, faster, less memory)
 
 class RAGSystem:
     """Enhanced RAG system with performance monitoring and caching"""
@@ -532,7 +532,7 @@ if __name__ == "__main__":
                 print("⚠️  Ollama not responding properly")
         except:
             print("❌ Ollama not running. Start with: ollama serve")
-            print("   Then pull model: ollama pull llama3.2")
+            print("   Then pull model: ollama pull llama3.2:1b")
 
         # Suggested queries
         print("\n" + "="*60)
@@ -627,4 +627,4 @@ if __name__ == "__main__":
         print("\nMake sure to:")
         print("  1. Run: python tools/index_pdfs.py")
         print("  2. Start Ollama: ollama serve")
-        print("  3. Pull model: ollama pull llama3.2")
+        print("  3. Pull model: ollama pull llama3.2:1b")

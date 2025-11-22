@@ -505,41 +505,37 @@ python ../tools/index_pdfs.py
 
 <br><br>
 
-2. Before we start, we need to ensure Ollama is running with the llama3.2 model. In a NEW terminal tab (click the + icon in the terminal), start Ollama:
-
-```
-ollama serve
-```
-
-Leave this terminal running. Then in your original terminal, verify the model is available:
-
-```
-ollama pull llama3.2
-```
-
-<br><br>
-
-3. Now let's examine our complete RAG implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
+2. Now let's examine our complete RAG implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
 
 ```
 code -d ../extra/rag_complete.txt rag_code.py
 ```
-<br><br>
 
-4. Once you have the diff view open, take a moment to look at the structure. Notice the three main methods: `retrieve()` for finding chunks, `build_prompt()` for augmenting with context, and `generate()` for calling the LLM. These are the three steps of RAG!
-
-<br><br>
-
-5. Now merge the code segments from the complete file (left side) into the skeleton file (right side) by clicking the arrow pointing right in the middle bar for each difference. Start with the imports section at the top, then work your way down through the class methods.
-
-![Side-by-side merge](../images/merge-example.png)
-<br><br>
-
-6. After merging all the changes, close the diff view by clicking the "X" in the tab. Save the file if prompted (CTRL/CMD + S).
+![Diff](./images/aia-1-42.png?raw=true "Diff")
 
 <br><br>
 
-7. Now let's run our complete RAG system:
+3. Once you have the diff view open, take a moment to look at the structure in the complete version on the left. Notice the three main methods: `retrieve()` for finding chunks, `build_prompt()` for augmenting with context, and `generate()` for calling the LLM. These are the three steps of RAG.
+
+- Lines 94-156: `retrieve()` - semantic search in ChromaDB
+- Lines 158-208: `build_prompt()` - combining context with the question
+- Lines 211-273: `generate()` - calling Ollama's Llama 3.2 model
+
+<br><br>
+
+4. Now, as you've done before, merge the code segments from the complete file (left side) into the skeleton file (right side) by clicking the arrow pointing right in the middle bar for each difference. Start with the comments section at the top, then work your way down through the class methods.
+
+![Merge](./images/aia-1-43.png?raw=true "Merge")
+
+<br><br>
+
+5. After merging all the changes, double-check that there are no remaining diffs (red blocks on the side). Then close the diff view by clicking the "X" in the tab. 
+
+![Completed](./images/aia-1-44.png?raw=true "Completed")
+
+<br><br>
+
+6. Now let's run our complete RAG system:
 
 ```
 python rag_code.py
@@ -549,11 +545,13 @@ The system will connect to the vector database we created in Lab 6 and check if 
 
 <br><br>
 
-8. You should see knowledge base statistics showing how many chunks are indexed, and a check that Ollama is running with the llama3.2 model. If you see any errors about Ollama not running, go back to step 2.
+7. You should see knowledge base statistics showing how many chunks are indexed, and a check that Ollama is running with the llama3.2 model. If you see any errors about Ollama not running, check that with "ollama list".  If Ollama doesn't respond, try "ollama serve &".
+
+![Running](./images/aia-1-45.png?raw=true "Running")
 
 <br><br>
 
-9. Now you'll be at a prompt to ask questions. Try this first question:
+8. Now you'll be at a prompt to ask questions. Try this first question:
 
 ```
 How can I return a product?
@@ -566,11 +564,11 @@ Watch what happens - the system will show you the three RAG steps in the logs:
 
 <br><br>
 
-10. After a few seconds, you'll see an ANSWER section with the LLM-generated response, followed by a SOURCES section showing which PDFs and pages were used. Notice how the answer is much more complete and natural than just showing search results!
+9. After a few seconds, you'll see an ANSWER section with the LLM-generated response, followed by a SOURCES section showing which PDFs and pages were used. Notice how the answer is much more complete and natural than just showing search results!
 
 <br><br>
 
-11. Try a few more questions to see RAG in action:
+10. Try a few more questions to see RAG in action:
 
 ```
 What are the shipping costs?
@@ -582,7 +580,7 @@ For each question, notice how the system retrieves relevant chunks and generates
 
 <br><br>
 
-12. Now try asking a question that's NOT in the PDFs to see how RAG handles it:
+11. Now try asking a question that's NOT in the PDFs to see how RAG handles it:
 
 ```
 What's the CEO's favorite color?
@@ -592,14 +590,12 @@ Notice how the system should say it doesn't have that information (rather than m
 
 <br><br>
 
-13. When you're done experimenting, type `quit` to exit the system.
+12. When you're done experimenting, type `quit` to exit the system.
 
 <br><br>
 
-14. (Optional) If you want to see the code in action, open the rag_code.py file and look at the three key methods:
-- Lines 94-156: `retrieve()` - semantic search in ChromaDB
-- Lines 158-206: `build_prompt()` - combining context with the question
-- Lines 208-268: `generate()` - calling Ollama's Llama 3.2 model
+13. (Optional) If you want to see the code in action, open the rag_code.py file and look at the three key methods:
+
 
 This is the complete RAG pipeline: **Retrieve → Augment → Generate**
 
