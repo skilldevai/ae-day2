@@ -25,7 +25,7 @@ This will run for a long time while it gets everything ready.
 
 After the initial startup, it will run a script to setup the python environment and install needed python pieces. This will take several more minutes to run. It will look like this while this is running.
 
-![Final prep](./images/aia-0-5.png?raw=true "Final prep")
+![Final prep](./images/aia-1-2.png?raw=true "Final prep")
 
 The codespace is ready to use when you see a prompt like the one shown below in its terminal.
 
