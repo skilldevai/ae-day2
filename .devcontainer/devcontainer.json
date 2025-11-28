@@ -52,5 +52,5 @@
         }
     },
     "postCreateCommand": "bash -i scripts/pysetup.sh py_env && bash -i scripts/startup_ollama.sh",
-    "postAttachCommand": "ollama serve & source ~/.ollama_colors.sh 2>/dev/null || true"
+    "postAttachCommand": "ollama serve &"
 }
