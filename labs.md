@@ -466,7 +466,7 @@ You can also pass search queries directly on the command line with the *--query*
 
 <br><br>
 
-7.  Now, let's create a vector database based off of the PDF files. Just run the indexer for the pdf file.
+7.  Let's create a vector database based off of the PDF files. Just run the indexer for the pdf file.
 
 ```
 python ../tools/index_pdfs.py
@@ -476,7 +476,7 @@ python ../tools/index_pdfs.py
 
 <br><br>
 
-8. Now, we can run the same search tool to find the top hits for information about the company policies. Below are some prompts you can try here. Notice the cosine similarity values on each - are they close? Farther apart?  When done, just type "exit".
+8. We can run the same search tool to find the top hits for information about the company policies. Below are some prompts you can try here. Notice the cosine similarity values on each - are they close? Farther apart?  When done, just type "exit".
 
 ```
   python ../tools/search.py --query "track my shipment" --target pdfs
