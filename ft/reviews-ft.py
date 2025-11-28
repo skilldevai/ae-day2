@@ -4,8 +4,6 @@ Product Review Sentiment Analysis Fine-Tuning Demo (Optimized)
 This script demonstrates fine-tuning a DistilBERT model for business product review analysis.
 
 
-
-
 - 66 million parameters
 - Optimized for classification tasks
 
@@ -24,9 +22,6 @@ print("="*80)
 print("\nBusiness Context: Automatically analyze customer product reviews to")
 print("identify satisfaction levels and prioritize customer support responses.\n")
 
-# ============================================================================
-# STEP 1: Load the Amazon Product Reviews Dataset
-# ============================================================================
 print("="*80)
 print("STEP 1: LOADING BUSINESS DATASET")
 print("="*80)
@@ -41,10 +36,6 @@ print(f"✓ Training examples loaded: {len(train_dataset):,}")
 print(f"✓ Test examples loaded: {len(test_dataset):,}")
 
 # Show example product reviews with variety
-
-# ============================================================================
-# STEP 2: Load Pre-trained Model
-# ============================================================================
 print("\n" + "="*80)
 print("STEP 2: LOADING PRE-TRAINED MODEL")
 print("="*80)
@@ -59,9 +50,6 @@ print(f"✓ Model loaded: {model.num_parameters():,} parameters")
 print("✓ Classification head: 2 outputs (negative, positive)")
 print("✓ Ready for fine-tuning")
 
-# ============================================================================
-# STEP 3: Tokenize the Data
-# ============================================================================
 print("\n" + "="*80)
 print("STEP 3: TOKENIZING CUSTOMER REVIEWS")
 print("="*80)
@@ -92,9 +80,6 @@ print(f"\nTokenization example:")
 print(f"Original text: \"{sample_text}...\"")
 print(f"Tokens: {sample_tokens[:8]}... ({len(sample_tokens)} tokens total)")
 
-# ============================================================================
-# STEP 4: Test BEFORE Fine-Tuning (Baseline)
-# ============================================================================
 print("\n" + "="*80)
 print("STEP 4: TESTING BEFORE FINE-TUNING (BASELINE)")
 print("="*80)
@@ -151,9 +136,6 @@ print(f"BASELINE ACCURACY: {correct_before}/{total_before} = {pre_fine_tune_accu
 print("="*80)
 print("💡 As expected, the untrained model is basically guessing!")
 
-# ============================================================================
-# STEP 5: Fine-Tune the Model
-# ============================================================================
 print("\n" + "="*80)
 print("STEP 5: FINE-TUNING THE MODEL ON PRODUCT REVIEWS")
 print("="*80)
@@ -177,9 +159,6 @@ trainer.train()
 print("-" * 80)
 print("\n✓ Training complete! The model has learned from customer reviews.")
 
-# ============================================================================
-# STEP 6: Test AFTER Fine-Tuning
-# ============================================================================
 print("\n" + "="*80)
 print("STEP 6: TESTING AFTER FINE-TUNING")
 print("="*80)
@@ -233,9 +212,6 @@ print(f"FINE-TUNED ACCURACY: {correct_after}/{total_after} = {post_fine_tune_acc
 print("="*80)
 print("Much better! The model has learned to understand product reviews!")
 
-# ============================================================================
-# STEP 7: Compare Results
-# ============================================================================
 print("\n" + "="*80)
 print("FINAL COMPARISON: BEFORE vs AFTER FINE-TUNING")
 print("="*80)
@@ -292,5 +268,5 @@ APPLICATIONS BEYOND PRODUCT REVIEWS:
 """)
 
 print("="*80)
-print("DONE!"
+print("DONE!")
 print("="*80)
