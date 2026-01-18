@@ -1,7 +1,7 @@
-# Enterprise AI Accelerator
-## Day 1 - Models and Retrieval Augmented Generation (RAG)
+# Applied AI Engineering for the Enterprise
+## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 1.2 - 11/28/25
+## Revision 1.0 - 01/18/25
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
