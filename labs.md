@@ -411,7 +411,7 @@ python reviews-ft.py
 1. For this lab and the following ones, we'll be using files in the *rag* subdirectory. Change to that directory.
 
 ```
-cd rag
+cd /workspaces/ae-day2/rag
 ```
 
 <br><br>
@@ -437,9 +437,7 @@ code ../tools/index_pdfs.py
 python ../tools/index_code.py
 ```
 
-![Running code indexer](./images/aia-1-35.png?raw=true "Running code indexer")
-
-![Running code indexer](./images/aia-1-36.png?raw=true "Running code indexer")
+![Running code indexer](./images/ae15.png?raw=true "Running code indexer")
 
 <br><br>
 
@@ -450,11 +448,10 @@ code ../tools/search.py
 ```
 
 This tool takes a *--target* argument when you run it with a value of either "code" or "pdfs" to indicate which vector database to search.
-You can also pass search queries directly on the command line with the *--query* argument. Or you can just start it and type in the queries, hit return, and get results. To exit in that mode, type "exit".
-
+You can also pass search queries directly on the command line with the *--query* argument. Or you can just start it and type in the queries, hit return, and get results. 
 <br><br>
 
-6. Now, let's run the search tool against the vector database we built in step 4. You can run it with phrases related to our coding like any of the ones shown below. You can run the commands with separate invocations of the tool as shown here, or just run it and enter them in interactive mode.  Notice the top hits and their respective cosine similarity values. Are they close? Farther apart?
+6. Let's run the search tool against the vector database we built in step 4. You can run it with phrases related to our coding like any of the ones shown below. You can run the commands with separate invocations of the tool as shown here, or just run it and enter them in interactive mode.  Notice the top hits and their respective cosine similarity values. Are they close? Farther apart?
 
 ```
   python ../tools/search.py --query "convert text to vectors" --target code
@@ -462,7 +459,7 @@ You can also pass search queries directly on the command line with the *--query*
   python ../tools/search.py --query "convert text to numbers" --target code
 ```
 
-![Running search](./images/aia-1-37.png?raw=true "Running search")
+![Running search](./images/ae16.png?raw=true "Running search")
 
 <br><br>
 
@@ -472,7 +469,7 @@ You can also pass search queries directly on the command line with the *--query*
 python ../tools/index_pdfs.py
 ```
 
-![Indexing PDFs](./images/aia-1-38.png?raw=true "Indexing PDFs")
+![Indexing PDFs](./images/ae17.png?raw=true "Indexing PDFs")
 
 <br><br>
 
@@ -484,11 +481,11 @@ python ../tools/index_pdfs.py
   python ../tools/search.py --query "exchange damaged item" --target pdfs
 ```
 
-![PDF search](./images/aia-1-40.png?raw=true "PDF search")
+![PDF search](./images/ae18.png?raw=true "PDF search")
 
 <br><br>
 
-8. Keep in mind that this is not trying to intelligently answer your prompts at this point. This is a simple semantic search to find related chunks. In lab 7, we'll add in the LLM to give us better responses. 
+9. Keep in mind that this is not trying to intelligently answer your prompts at this point. This is a simple semantic search to find related chunks. In lab 7, we'll add in the LLM to give us better responses. 
 
 <br>
 <p align="center">
