@@ -614,135 +614,266 @@ Notice how the system should say it doesn't have that information (rather than m
 </p>
 </br></br>
 
-**Lab 8: Tuning RAG - Temperature and Context**
+**Lab 8 - Graph RAG**
 
-**Purpose: In this lab, we'll learn how to control RAG quality by tuning retrieval settings and temperature parameters.**
+**Purpose: In this lab, we'll see how Graph RAG works via leveraging frameworks and using LLMs to help generate queries.**
 
-1. You should still be in the *rag* subdirectory. Open the RAG code file:
+1. To do this lab, first we need a neo4j instance running to manage the graph database. We'll use a docker image for this that is already populated with data for us. Change to the neo4j directory, set an environment variable for the DOCKER version and run the script with the "2" parameter. This will take a few minutes to build and start. Be sure to add the "&" to run this in the background.
 
-```
-code rag_code.py
-```
-<br><br>
-
-2. Find line 465 where it says `result = rag.query(question, max_context_chunks=3)`. This controls how many chunks are retrieved. Try changing `3` to `1`, save, and run:
+(When it is ready, you may see a "*INFO  [neo4j/########] successfully initialized:*" message or one that says "naming to docker.io/library/neo4j:custom".) Just hit *Enter* and you can change back to the *workspaces/rag* subdirectory. 
 
 ```
-python rag_code.py
-```
+cd /workspaces/ae-day2/neo4j
 
-Ask: `How can I return a product?`
+export DOCKER_API_VERSION=1.43
 
-The answer may be ok, or it may be incomplete, without enough context. Type `quit` to exit.
+./neo4j-setup.sh 2 &
 
-![Mod](./images/aia-1-49.png?raw=true "Mod")
+cd ..
+``` 
 
 <br><br>
 
-3. Change `max_context_chunks` to `10`, save, and run again with the same question. Now there may be too much context - it may be confusing or overwhelming. 
-
-![Mod](./images/aia-1-51.png?raw=true "Mod")
-
-<br>
-
-Type `exit`. **Change it back to `3` (the sweet spot) and save it.**
-
-![Mod](./images/aia-1-53.png?raw=true "Mod")
-
-
-<br><br>
-
-4. Now let's experiment with **temperature** - this controls how creative vs consistent the LLM is. Find the `generate()` method around line 236. Change `"temperature": 0.3` to `0.0` (very deterministic). Save the file.
-
-![Temperature setting](./images/aia-1-58.png?raw=true "Temperature setting")
-
-<br><br>
-
-5. Run the system and ask the same question **twice**:
+2. This graph database is prepopulated with a large set of nodes and relationships related to movies. This includes actors and directors associated with movies, as well as the movie's genre, imdb rating, etc. You can take a look at the graph nodes by running the following commands in the terminal. **You should be in the "root" directory (/workspaces/rag) when you run these commands.**
 
 ```
-python rag_code.py
+npm i -g http-server
+http-server
 ```
 
-Ask twice: `What are the shipping costs?`
+<br><br>
 
-The answers should be nearly identical - temperature 0.0 gives consistent results. Type `exit`.
+3. After a moment, you should see a pop-up dialog that you can click on to open a browser to see some of the nodes in the graph. It will take a minute or two to load and then you can zoom in by using your mouse (roll wheel) to see more details.
 
-![Low temperature setting](./images/aia-1-59.png?raw=true "Low temperature setting")
+![running local web server](./images/rag24.png?raw=true "running local web server")
+![loading nodes](./images/rag25.png?raw=true "loading nodes")
+![graph nodes](./images/rag26.png?raw=true "graph nodes")
+
 
 <br><br>
 
-6. Change temperature to `1.7` (very creative), save, and run again. Ask the same question twice. Notice the answers may vary quite a bit more - different wording, different order, and not as *professional*. This is less predictable. Type `exit` and change temperature back to `0.3`.
-
-<br>
-
-![Temperature setting](./images/aia-1-57.png?raw=true "Temperature setting")
-
-<br>
-
-![High temperature output](./images/aia-1-56.png?raw=true "High temperature output")
-
-<br>
-
-**Type `exit` and change temperature back to `0.3`.**
-
-<br><br>
-
-7. Now let's see **what the LLM actually sees**. Find the `query()` method around line 317. Right after the line `prompt = self.build_prompt(question, context_chunks)`, add this debug code:
-
-```python
-        # DEBUG: Show what the LLM actually sees
-        print("\n" + "="*60)
-        print("DEBUG: PROMPT SENT TO LLM")
-        print("="*60)
-        print(prompt)
-        print("="*60 + "\n")
+4. When done, you can stop the *http-server* process with *Ctrl-C*. Now, let's go back and create a file to use the langchain pieces and the llm to query our graph database. Change back to the *genai* directory and create a new file named lab5.py.
+```
+cd code
+code lab8.py
 ```
 
-Save the file.
-
-![Adding debug output](./images/aia-1-60.png?raw=true "Adding debug output")
-
 <br><br>
 
-8. Save your changes. Run the system and ask a question:
-
+5. First, add the imports from *langchain* that we need. Put the following lines in the file you just created.
 ```
-python rag_code.py
+from langchain_neo4j import Neo4jGraph, GraphCypherQAChain
+from langchain_ollama import OllamaLLM
 ```
 
-Ask: `How can I return a product?`
-
 <br><br>
 
-9. You'll now see the complete prompt including the system instructions, the 3 retrieved context chunks with sources, and your question. This is the "Augmentation" in RAG - augmenting your question with relevant context.
-
-![Prompt visualization](./images/aia-1-61.png?raw=true "Prompt visualization")
-
-<br><br>
-
-10. Try another question to see how the context changes:
-
+6. Now, let's add the connection to the graph database. Add the following to the file.
 ```
-What are the shipping costs?
+graph = Neo4jGraph(
+    url="bolt://localhost:7687",
+    username="neo4j",
+    password="neo4jtest",
+    enhanced_schema=False,
+)
 ```
 
-Notice how different chunks are retrieved, but the prompt structure stays the same. The context adapts to each question!
+<br><br>
+
+
+7. Next, let's create the chain instance that will allow us to leverage the LLM to help create the Cypher query and help frame the answer so it makes sense. We'll use Ollama and our llama3 model for both the LLM to create the Cypher queries and the LLM to help frame the answers.
+```
+chain = GraphCypherQAChain.from_llm(
+    cypher_llm=OllamaLLM(model="llama3.2:3b", temperature=0),
+    qa_llm=OllamaLLM(model="llama3.2:3b", temperature=0),
+    graph=graph,
+    verbose=True,
+    allow_dangerous_requests=True,
+)
+```
 
 <br><br>
 
-11. When done, type `exit`. You can remove or comment out the debug print statements (add `#` before each line you added in step 7) to clean up the output for production use.
+8. Finally, let's add the code loop to take in a query and invoke the chain. After you've added this code, save the file.
+```
+while True:
+    query = input("\nQuery: ")
+    if query == "exit":
+        break
+    if query.strip() == "":
+        continue
+    response = chain.invoke({"query": query})
+    print(response["result"])
+```
 
 <br><br>
 
-**Key Takeaways:**
-- **Chunk count (k)** affects answer quality - too few chunks miss context, too many add noise. 3-5 is often optimal.
-- **Temperature** controls consistency vs creativity - low (0.1) for deterministic answers, high (0.9) for varied responses, medium (0.3-0.5) for balance.
-- **RAG augmentation** adds retrieved context to your prompt before sending to the LLM - visualizing this helps you debug and improve results.
-- The same question can retrieve different context chunks, showing how semantic search adapts to each query.
+9. Now, run the code.
+```
+python lab8.py
+```
+
+<br><br>
+
+10. You can prompt it with queries related to the info in the graph database, like:
+```
+Who starred in Star Trek : Generations?
+Which movies are comedies?
+```
+
 
 <p align="center">
-<b>[END OF LAB]</b>
+**[END OF LAB]**
+</p>
+</br></br>
+
+**Lab 9 - Hybrid RAG: Semantic Search + Knowledge Graph**
+
+**Purpose: In this lab, we'll build a hybrid RAG system that combines semantic search (ChromaDB) with knowledge graph traversal (Neo4j) to get both precision and context in our answers.**
+
+1. RAG works because semantic search understands meaning. But for precise facts (timeframes, contacts, relationships), a knowledge graph provides structured answers. Combining both gives us the best of both worlds.
+
+For this lab, a knowledge graph has been pre-built from the OmniTech documents. It contains:
+- **Entities**: Products, Policies, TimeFrames, Contacts, Conditions, Fees, ShippingMethods, Documents
+- **Relationships**: APPLIES_TO, HAS_TIMEFRAME, HANDLES, REQUIRES_CONDITION, HAS_FEE, USES_SHIPPING, CONTAINS
+
+You can view it [here](./neo4j/data3/omnitech_policies.csv) if interested.
+
+<br><br>
+  
+2. First, let's create the Neo4j graph database with the OmniTech knowledge graph. Run the commands (similar to lab 8) below.
+
+```
+cd /workspaces/ae-day2/neo4j
+./neo4j-setup.sh 3 &
+```
+
+Wait for the message indicating Neo4j is ready (about 30-60 seconds). The script will:
+- Build a Docker image with the OmniTech schema
+- Start Neo4j container on ports 7474 (web) and 7687 (Bolt)
+- Auto-initialize the knowledge graph via APOC
+
+When done, you will see a message ending with "Then run:    MATCH (n) RETURN count(n);". This is informational and you can just hit *Enter/Return* to get back to the prompt.
+
+![building graph db](./images/ragv2-17.png?raw=true "building graph db")
+
+<br><br>
+
+3. Change back to the code directory. Then we'll build out the hybrid RAG system as lab6.py with the diff and merge process that we've used before. The second command below will start up the editor session.
+   
+```
+cd /workspaces/rag/code
+code -d ../extra/lab9-changes.txt lab9.py
+```
+
+![building hybrid code](./images/ragv2-18.png?raw=true "building hybrid code")
+
+<br><br>
+
+4. What you'll see here is that most of the merges are comment sections explaining what the code does (plus some for the prompt, etc.). You can review and merge them as we've done before. After looking over the change, hover over the middle section and click the arrow to merge. Continue with this process until there are no more differences. Then click on the "X" in the tab at the top to close and save your changes.
+
+![merge and save](./images/ragv2-19.png?raw=true "merge and save")
+
+<br><br>
+ 
+
+5. Now let's run the hybrid RAG demo with the command below (in the *code* directory). This will then be waiting for you to type in a query.
+
+```
+python lab9.py
+```
+
+![running](./images/ragv2-20.png?raw=true "running")
+
+<br><br>
+
+6. Let's try a basic query for the return policy. Type in the query below and hit *Enter/Return*.
+
+```
+What is the return window for Pro-Series equipment and who do I contact?
+```
+
+![running query](./images/ragv2-22.png?raw=true "running query")
+
+7. Watch the output - the demo asks the same question using three different methods:
+
+You'll see:
+- **METHOD 1: SEMANTIC** - Finds document chunks with similar meaning
+- **METHOD 2: GRAPH** - Traverses Neo4j relationships via Cypher
+- **METHOD 3: HYBRID** - Combines both for precision + context
+
+Each method shows:
+- What it retrieved (chunks vs graph nodes)
+- The LLM-generated answer based on that context
+
+<br><br>
+
+You can compare the results:
+
+| Method | What it found | Strength |
+|--------|---------------|----------|
+| SEMANTIC | Document chunks mentioning Pro-Series | Good context, handles vocabulary mismatch |
+| GRAPH | Pro_Series → Pro_Series_Return → 14_Days | Precise facts via Cypher traversal |
+| HYBRID | Graph facts + Document context | Combines both worlds |
+
+![multiple answers](./images/ragv2-21.png?raw=true "multiple answers")
+
+<br><br>
+
+8. Let's try another query that may benefit more from having the graph db involved. Enter the one below.
+   
+```
+Who handles defective items?
+```
+
+![2nd query](./images/ragv2-24.png?raw=true "2nd query")
+
+<br><br>
+
+
+9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information.
+
+![2nd query](./images/ragv2-23.png?raw=true "2nd query")
+
+<br><br>
+    
+Notice the `HybridRAG` class connects to both databases:
+- **ChromaDB** for semantic search (lines 46-53)
+- **Neo4j** for graph search (lines 55-67)
+
+<br><br>
+
+10. Discussion Points:
+- **Semantic search** (ChromaDB) understands MEANING - handles "money back" → "refund"
+- **Graph search** (Neo4j) understands STRUCTURE - traverses entity relationships
+- **Cypher queries** navigate: `Product → Policy → TimeFrame → Contact`
+- **Hybrid** combines both: graph precision + semantic context
+- This mirrors production RAG architectures used by enterprises
+
+<br><br>
+
+11. [OPTIONAL] You can also visualize the knowledge graph. Start a local web server:
+
+```
+cd /workspaces/rag/neo4j/data3/public
+npx http-server
+```
+
+Click the pop-up to open the browser and see the graph visualization. You can move around using the mouse and also zoom in and out. 
+
+**NOTE**: If you can't open the page, you may need to go back to the codespace, go to the *PORTS* tab (next to *TERMINAL*), right-click, and set the *Visibility* field to *Public*. See screenshot below.
+
+![make port public](./images/ragv2-26.png?raw=true "make port public")
+
+After that, refresh the page and try again. You may still have to click through another page to allow access.
+
+<br><br>
+
+**Key Takeaway:**
+> Semantic search understands MEANING. Graph search understands STRUCTURE. Together they provide comprehensive, accurate answers.
+
+<p align="center">
+**[END OF LAB]**
 </p>
 </br></br>
 
