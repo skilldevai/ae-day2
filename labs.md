@@ -269,7 +269,7 @@ code translation.py
 python translation.py
 ```
 
-![translation by model](./images/aia-1-24.png?raw=true "translation by model")
+![translation by model](./images/ae12.png?raw=true "translation by model")
  
 <br><br>
 
