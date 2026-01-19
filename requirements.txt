@@ -35,3 +35,6 @@ matplotlib>=3.6.0
 langchain-community>=0.4.1
 langchain-neo4j>=0.6.0
 langchain-ollama>=1.0.1
+
+# Data handling
+py2neo>=2021.2.4
