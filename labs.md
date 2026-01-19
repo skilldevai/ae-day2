@@ -175,7 +175,7 @@ code vectors.py
 python vectors.py bert-base-cased 5
 ```
 
-![vectors program run](./images/aia-1-14.png?raw=true "vectors program run")
+![vectors program run](./images/ae10.png?raw=true "vectors program run")
 
 <br><br>
 
@@ -184,7 +184,7 @@ python vectors.py bert-base-cased 5
    - queen
    - duck
 
-![vectors program inputs](./images/aia-1-15.png?raw=true "vectors program inputs")
+![vectors program inputs](./images/ae11.png?raw=true "vectors program inputs")
 
 <br><br>
 
