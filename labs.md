@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 1.1 - 01/19/26
+## Revision 1.2 - 01/19/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -332,7 +332,7 @@ python sentiment.py
 1. For this lab, we will build out a starter file into a full fine-tuning example. The starter file is in the ft (for "fine tuning") directory. Change into that directory.
 
 ```
-cd /workspaces/aia-day1/ft
+cd /workspaces/ae-day2/ft
 ```
 
 <br><br>
@@ -378,7 +378,7 @@ code -d ../extra/reviews-ft.txt reviews-ft.py
 python reviews-ft.py
 ```
 
-![running](./images/aia-1-31.png?raw=true "running")
+![running](./images/ae13.png?raw=true "running")
 
 <br><br>
 
@@ -390,7 +390,7 @@ python reviews-ft.py
 
 9. Now the model will use some Hugging Face transformer library tools to train the model from the dataset. This part will take probably as much as 5-8 minutes. What you are looking for here is the *loss value* to go down as the fine tuning proceeds. The loss value going down means that the model is getting better at predicting the sentiment as it learns from the dataset examples. 
 
-![fine tuning run](./images/aia-1-33.png?raw=true "fine tuning run")
+![fine tuning run](./images/ae14.png?raw=true "fine tuning run")
 
 <br><br>
 
