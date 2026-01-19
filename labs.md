@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 1.2 - 01/19/26
+## Revision 1.10 - 01/19/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -802,7 +802,7 @@ code -d ../extra/lab9-changes.txt lab9.py
 python lab9.py
 ```
 
-![running](./images/ragv2-20.png?raw=true "running")
+![running](./images/ae27.png?raw=true "running")
 
 <br><br>
 
@@ -812,7 +812,7 @@ python lab9.py
 What is the return window for Pro-Series equipment and who do I contact?
 ```
 
-![running query](./images/ragv2-22.png?raw=true "running query")
+![running query](./images/ae29.png?raw=true "running query")
 
 7. Watch the output - the demo asks the same question using three different methods:
 
@@ -835,7 +835,7 @@ You can compare the results:
 | GRAPH | Pro_Series → Pro_Series_Return → 14_Days | Precise facts via Cypher traversal |
 | HYBRID | Graph facts + Document context | Combines both worlds |
 
-![multiple answers](./images/ragv2-21.png?raw=true "multiple answers")
+![multiple answers](./images/ae28.png?raw=true "multiple answers")
 
 <br><br>
 
@@ -845,14 +845,12 @@ You can compare the results:
 Who handles defective items?
 ```
 
-![2nd query](./images/ragv2-24.png?raw=true "2nd query")
-
 <br><br>
 
 
-9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information.
+9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information. Also, the *HYBRID* option outlines exceptions.
 
-![2nd query](./images/ragv2-23.png?raw=true "2nd query")
+![2nd query](./images/ae30.png?raw=true "2nd query")
 
 <br><br>
     
@@ -874,11 +872,15 @@ Notice the `HybridRAG` class connects to both databases:
 11. [OPTIONAL] You can also visualize the knowledge graph. Start a local web server:
 
 ```
-cd /workspaces/rag/neo4j/data3/public
+cd /workspaces/ae-day2/neo4j/data3/public
 npx http-server
 ```
 
 Click the pop-up to open the browser and see the graph visualization. You can move around using the mouse and also zoom in and out. 
+
+![OmniTech Knowledge Graph](./images/ae31.png?raw=true "OmniTech Knowledge Graph")
+
+<br><br>
 
 **NOTE**: If you can't open the page, you may need to go back to the codespace, go to the *PORTS* tab (next to *TERMINAL*), right-click, and set the *Visibility* field to *Public*. See screenshot below.
 
