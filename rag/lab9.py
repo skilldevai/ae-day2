@@ -39,6 +39,57 @@ from chromadb.config import Settings, DEFAULT_TENANT, DEFAULT_DATABASE
 from py2neo import Graph
 
 # ══════════════════════════════════════════════════════════════════════════════
+# HELPER FUNCTIONS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def get_neo4j_uri(container_name: str = "neo4j", port: int = 7687) -> str:
+    """
+    Dynamically discover the Neo4j container's URI.
+
+    This function tries multiple methods to find the Neo4j container:
+    1. Check environment variable NEO4J_URI
+    2. Try to get container IP via Docker inspect
+    3. Try container name (works if on same Docker network)
+    4. Fall back to localhost (works with port forwarding)
+
+    Args:
+        container_name: Name of the Neo4j Docker container
+        port: Neo4j Bolt protocol port (default 7687)
+
+    Returns:
+        Neo4j URI string (e.g., "neo4j://172.17.0.2:7687")
+    """
+    # Method 1: Check environment variable
+    env_uri = os.getenv("NEO4J_URI")
+    if env_uri:
+        return env_uri
+
+    # Method 2: Try to get container IP from Docker
+    try:
+        result = subprocess.run(
+            ["docker", "inspect", container_name,
+             "--format={{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}"],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        if result.returncode == 0:
+            container_ip = result.stdout.strip()
+            if container_ip and container_ip != "":
+                return f"neo4j://{container_ip}:{port}"
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        pass
+
+    # Method 3: Try using container name (works on same Docker network)
+    # Method 4: Fall back to localhost (works with port mapping)
+    # We'll return localhost and let the connection attempt determine if it works
+    return f"neo4j://localhost:{port}"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# These settings control where to find each database and which LLM to use
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Path to the ChromaDB database directory (created by index_pdfs.py)
@@ -49,9 +100,9 @@ CHROMA_PATH = "./chroma_db"
 # This was set when running index_pdfs.py
 COLLECTION_NAME = "pdf_documents"
 
-# Neo4j connection URI - Bolt protocol on default port 7687
+# Neo4j connection URI - Dynamically discovered from Docker container
 # Neo4j must be running (./neo4j-setup.sh 3) for graph search to work
-NEO4J_URI = "neo4j://localhost:7687"
+NEO4J_URI = get_neo4j_uri()
 
 # Neo4j authentication credentials
 # These match what's set in neo4j-setup.sh
@@ -62,8 +113,8 @@ NEO4J_AUTH = ("neo4j", "neo4jtest")
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 # Which Ollama model to use for generating answers
-# llama3.2:3b is a good balance of speed and quality for demos
-OLLAMA_MODEL = "llama3.2:3b"
+# llama3.2:latest is a good balance of speed and quality for demos
+OLLAMA_MODEL = "llama3.2:latest"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -140,7 +191,7 @@ class HybridRAG:
         If Neo4j isn't running, graph search will be disabled but the system
         continues to work with semantic search only.
         """
-        print("Connecting to Neo4j...")
+        print(f"Connecting to Neo4j at {NEO4J_URI}...")
         try:
             # Create a connection to the Neo4j database
             # py2neo's Graph class handles the Bolt protocol connection
