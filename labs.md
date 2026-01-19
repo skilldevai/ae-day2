@@ -814,7 +814,7 @@ What is the return window for Pro-Series equipment and who do I contact?
 
 ![running query](./images/ae29.png?raw=true "running query")
 
-7. Watch the output - the demo asks the same question using three different methods:
+7. Watch the output - the demo asks the same question using three different methods: (Ignore any "onnxruntime" warnings.)
 
 You'll see:
 - **METHOD 1: SEMANTIC** - Finds document chunks with similar meaning
@@ -848,7 +848,7 @@ Who handles defective items?
 <br><br>
 
 
-9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information. Also, the *HYBRID* option outlines exceptions.
+9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information. Also, the *HYBRID* option may outline exceptions.
 
 ![2nd query](./images/ae30.png?raw=true "2nd query")
 
