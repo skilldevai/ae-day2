@@ -740,9 +740,11 @@ Who starred in Star Trek : Generations?
 Which movies are comedies?
 ```
 
+![querying the graph](./images/ae24.png?raw=true "querying the graph")
+
 
 <p align="center">
-**[END OF LAB]**
+<b>[END OF LAB]</b>
 </p>
 </br></br>
 
@@ -892,7 +894,7 @@ After that, refresh the page and try again. You may still have to click through 
 > Semantic search understands MEANING. Graph search understands STRUCTURE. Together they provide comprehensive, accurate answers.
 
 <p align="center">
-**[END OF LAB]**
+<b>[END OF LAB]</b>
 </p>
 </br></br>
 
