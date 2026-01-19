@@ -769,31 +769,29 @@ cd /workspaces/ae-day2/neo4j
 ./neo4j-setup.sh 3 &
 ```
 
-Wait for the message indicating Neo4j is ready (about 30-60 seconds). The script will:
+Wait for the message indicating Neo4j is ready. The script will:
 - Build a Docker image with the OmniTech schema
 - Start Neo4j container on ports 7474 (web) and 7687 (Bolt)
 - Auto-initialize the knowledge graph via APOC
 
 When done, you will see a message ending with "Then run:    MATCH (n) RETURN count(n);". This is informational and you can just hit *Enter/Return* to get back to the prompt.
 
-![building graph db](./images/ragv2-17.png?raw=true "building graph db")
+![building graph db](./images/ae25.png?raw=true "building graph db")
 
 <br><br>
 
-3. Change back to the code directory. Then we'll build out the hybrid RAG system as lab6.py with the diff and merge process that we've used before. The second command below will start up the editor session.
+3. Change back to the code directory. Then we'll build out the hybrid RAG system as *lab9.py* with the diff and merge process that we've used before. The second command below will start up the editor session.
    
 ```
-cd /workspaces/rag/code
+cd /workspaces/ae-day2/rag
 code -d ../extra/lab9-changes.txt lab9.py
 ```
 
-![building hybrid code](./images/ragv2-18.png?raw=true "building hybrid code")
+![building hybrid code](./images/ae26.png?raw=true "building hybrid code")
 
 <br><br>
 
 4. What you'll see here is that most of the merges are comment sections explaining what the code does (plus some for the prompt, etc.). You can review and merge them as we've done before. After looking over the change, hover over the middle section and click the arrow to merge. Continue with this process until there are no more differences. Then click on the "X" in the tab at the top to close and save your changes.
-
-![merge and save](./images/ragv2-19.png?raw=true "merge and save")
 
 <br><br>
  
