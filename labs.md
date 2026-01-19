@@ -70,7 +70,7 @@ python nn.py
 ```
 python nn.py
 ```
-![Second run of simple nn](./images/ae-7.png?raw=true "Second run of simple nn") 
+![Second run of simple nn](./images/ae7.png?raw=true "Second run of simple nn") 
 
 <br><br>
 
