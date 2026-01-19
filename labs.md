@@ -129,7 +129,7 @@ python tokenizer.py bert-base-uncased
 This is sample text for tokenization and text for embeddings.
 ```
 
-![input for tokenization](./images/aia-1-12.png?raw=true "input for tokenization")
+![input for tokenization](./images/ae9.png?raw=true "input for tokenization")
 
 <br><br>
 
