@@ -548,7 +548,7 @@ The system will connect to the vector database we created in Lab 6 and check if 
 
 7. You should see knowledge base statistics showing how many chunks are indexed, and a check that Ollama is running with the llama3.2:1b model. If you see any errors about Ollama not running, check that with "ollama list".  If Ollama doesn't respond, try "ollama serve &".
 
-![Running](./images/aia-1-45.png?raw=true "Running")
+![Running](./images/ae19.png?raw=true "Running")
 
 <br><br>
 
@@ -567,7 +567,7 @@ Watch what happens - the system will show you the three RAG steps in the logs:
 
 9. After a few seconds, you'll see an ANSWER section with the LLM-generated response, followed by a SOURCES section showing which PDFs and pages were used. Notice how the answer is much more complete and natural than just showing search results.
 
-![Answer](./images/aia-1-47.png?raw=true "Answer")
+![Answer](./images/ae20.png?raw=true "Answer")
 
 <br><br>
 
@@ -581,7 +581,7 @@ What should I do if my device won't turn on?
 
 For each question, notice how the system retrieves relevant chunks and generates a complete answer based on that context.
 
-![Answer](./images/aia-1-46.png?raw=true "Answer")
+![Answer](./images/ae21.png?raw=true "Answer")
 
 <br><br>
 
