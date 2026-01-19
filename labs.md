@@ -44,25 +44,25 @@ code nn.py
 ```
 python nn.py
 ```
-![Starting run of simple nn](./images/aia-1-4.png?raw=true "Starting run of simple nn") 
+![Starting run of simple nn](./images/ae4.png?raw=true "Starting run of simple nn") 
 
 <br><br>
 
 5. What you should see is that the weights after training are now set in a way that makes it more likely that the result will match the expected output value. (The higher positive value for the first weight means that the model has looked at the training data and realized it should "weigh" the first input higher in its prediction.) To prove this out, you can enter your own input set - just use 1's and 0's for each input. 
 
-![Inputs to simple nn](./images/aia-1-5.png?raw=true "Inputs to simple nn") 
+![Inputs to simple nn](./images/ae3.png?raw=true "Inputs to simple nn") 
 
 <br><br>
 
 6. After you put in your inputs, the neural net will process your input and because of the training, it should predict a result that is close to the first input value you entered (the one for *Input one*).
 
-![Prediction close to first input](./images/aia-1-6.png?raw=true "Prediction close to first input") 
+![Prediction close to first input](./images/ae5.png?raw=true "Prediction close to first input") 
 
 <br><br>
 
 7. Now, let's see what happens if we change the expected outputs to be different. In the editor for the *nn.py* file, find the line for the *training_outputs*. Modify the values in the array to be ([[0],[1],[0],[1]]). These are the values of the second element in each of the training data entries. After you're done, **save your changes**. (You can use the CMD/CTRL+S keyboard shortcut.)
 
-![Modifying expected outputs](./images/aia-1-7.png?raw=true "Modifying expected outputs")
+![Modifying expected outputs](./images/ae6.png?raw=true "Modifying expected outputs")
 
 <br><br>
 
@@ -70,7 +70,7 @@ python nn.py
 ```
 python nn.py
 ```
-![Second run of simple nn](./images/aia-1-8.png?raw=true "Second run of simple nn") 
+![Second run of simple nn](./images/ae-7.png?raw=true "Second run of simple nn") 
 
 <br><br>
 
