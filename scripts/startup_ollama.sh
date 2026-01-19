@@ -61,3 +61,7 @@ fi
 # ---- Pull model(s) ----
 ollama pull llama3.2
 ollama list
+
+# ---- Stop server ----
+kill "$pid" >/dev/null 2>&1 || true
+wait "$pid" 2>/dev/null || true

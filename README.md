@@ -38,12 +38,17 @@ These instructions will guide you through running the container environment loca
 
 ## Setup Steps
 
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2)
+
+Open in Dev Containers: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2
+
 ### 1. Clone the Repository
 Open Terminal and run:
 ```bash
-git clone https://github.com/skillrepos/ai-aip.git
+git clone https://github.com/skilldevai/ae-day2.git
 cd ai-aip
 ```
+
 
 ### 2. Open in VS Code
 ```bash
@@ -69,22 +74,7 @@ The first time you open the container, it will take **10-15 minutes** to:
 
 You can monitor progress in the VS Code terminal.
 
-### 5. Verify Ollama is Running
-After the container finishes building, Ollama should start automatically. To verify:
-```bash
-ollama list
-```
 
-If Ollama is not running, start it manually:
-```bash
-ollama serve &
-```
-
-### 6. Run the Warmup Script (Recommended)
-To ensure everything is working correctly:
-```bash
-python scripts/warmup_comprehensive.py
-```
 
 ## Troubleshooting
 

@@ -52,5 +52,5 @@
         }
     },
     "postCreateCommand": "bash -i scripts/pysetup.sh py_env && bash -i scripts/startup_ollama.sh",
-    "postAttachCommand": "nohup bash -c 'ollama serve &'"
+    "postAttachCommand": "bash -lc \"ollama serve >/tmp/ollama.log 2>&1 &\""
 }
