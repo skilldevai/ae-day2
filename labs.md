@@ -620,7 +620,7 @@ Notice how the system should say it doesn't have that information (rather than m
 
 1. To do this lab, first we need a neo4j instance running to manage the graph database. We'll use a docker image for this that is already populated with data for us. Change to the neo4j directory, set an environment variable for the DOCKER version and run the script with the "2" parameter. This will take a few minutes to build and start. Be sure to add the "&" to run this in the background.
 
-(When it is ready, you may see a "*INFO  [neo4j/########] successfully initialized:*" message or one that says "naming to docker.io/library/neo4j:custom".) Just hit *Enter* and you can change back to the *workspaces/rag* subdirectory. 
+(When it is ready, you may see a "*INFO  [neo4j/########] successfully initialized:*" message or one that says "naming to docker.io/library/neo4j:custom".) Just hit *Enter* and you can change back to the *workspaces/ae-day2* subdirectory. 
 
 ```
 cd /workspaces/ae-day2/neo4j
@@ -634,7 +634,7 @@ cd ..
 
 <br><br>
 
-2. This graph database is prepopulated with a large set of nodes and relationships related to movies. This includes actors and directors associated with movies, as well as the movie's genre, imdb rating, etc. You can take a look at the graph nodes by running the following commands in the terminal. **You should be in the "root" directory (/workspaces/rag) when you run these commands.**
+2. This graph database is prepopulated with a large set of nodes and relationships related to movies. This includes actors and directors associated with movies, as well as the movie's genre, imdb rating, etc. You can take a look at the graph nodes by running the following commands in the terminal. **You should be in the "root" directory (/workspaces/ae-day2) when you run these commands.**
 
 ```
 npm i -g http-server
@@ -643,11 +643,10 @@ http-server
 
 <br><br>
 
-3. After a moment, you should see a pop-up dialog that you can click on to open a browser to see some of the nodes in the graph. It will take a minute or two to load and then you can zoom in by using your mouse (roll wheel) to see more details.
+3. Go to a web browser and open [http://localhost:8080/index.html](http://localhost:8080/index.html) After a moment, you should see a pop-up dialog that you can click on to open a browser to see some of the nodes in the graph. It will take a minute or two to load and then you can zoom in by using your mouse (roll wheel) to see more details.
 
-![running local web server](./images/rag24.png?raw=true "running local web server")
-![loading nodes](./images/rag25.png?raw=true "loading nodes")
-![graph nodes](./images/rag26.png?raw=true "graph nodes")
+![loading nodes](./images/ae22.png?raw=true "loading nodes")
+![graph nodes](./images/ae23.png?raw=true "graph nodes")
 
 
 <br><br>
@@ -668,10 +667,28 @@ from langchain_ollama import OllamaLLM
 
 <br><br>
 
-6. Now, let's add the connection to the graph database. Add the following to the file.
+6. Now, let's add the connection to the graph database, including dynamically getting the container IP. Add the following to the file.
 ```
+# Dynamically get Neo4j container IP
+def get_neo4j_url():
+    try:
+        result = subprocess.run(
+            ["docker", "inspect", "-f", "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}", "neo4j"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        container_ip = result.stdout.strip()
+        if container_ip:
+            return f"bolt://{container_ip}:7687"
+    except subprocess.CalledProcessError:
+        pass
+
+    # Fallback to localhost
+    return "bolt://localhost:7687"
+
 graph = Neo4jGraph(
-    url="bolt://localhost:7687",
+    url=get_neo4j_url(),
     username="neo4j",
     password="neo4jtest",
     enhanced_schema=False,
@@ -684,8 +701,8 @@ graph = Neo4jGraph(
 7. Next, let's create the chain instance that will allow us to leverage the LLM to help create the Cypher query and help frame the answer so it makes sense. We'll use Ollama and our llama3 model for both the LLM to create the Cypher queries and the LLM to help frame the answers.
 ```
 chain = GraphCypherQAChain.from_llm(
-    cypher_llm=OllamaLLM(model="llama3.2:3b", temperature=0),
-    qa_llm=OllamaLLM(model="llama3.2:3b", temperature=0),
+    cypher_llm=OllamaLLM(model="llama3.2:latest", temperature=0),
+    qa_llm=OllamaLLM(model="llama3.2:latest", temperature=0),
     graph=graph,
     verbose=True,
     allow_dangerous_requests=True,
