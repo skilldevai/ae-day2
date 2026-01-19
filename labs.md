@@ -653,7 +653,7 @@ http-server
 
 4. When done, you can stop the *http-server* process with *Ctrl-C*. Now, let's go back and create a file to use the langchain pieces and the llm to query our graph database. Change back to the *genai* directory and create a new file named lab5.py.
 ```
-cd code
+cd ../rag
 code lab8.py
 ```
 
@@ -661,6 +661,8 @@ code lab8.py
 
 5. First, add the imports from *langchain* that we need. Put the following lines in the file you just created.
 ```
+import subprocess
+
 from langchain_neo4j import Neo4jGraph, GraphCypherQAChain
 from langchain_ollama import OllamaLLM
 ```
