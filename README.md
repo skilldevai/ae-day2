@@ -9,75 +9,21 @@ These instructions will guide you through running the container environment loca
 **1. First, ensure you have the prerequisites list under the [Prerequisites](#prerequisites) section installed and running on your system.**
 
 
-## Setup Steps
+**2. Click on the button below to open the code from this repository as a development container in your local VS Code instance.**
 
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2)
+Click here ➡️ [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2)
 
-Open in Dev Containers: https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2
-
-### 1. Clone the Repository
-Open Terminal and run:
-```bash
-git clone https://github.com/skilldevai/ae-day2.git
-cd ai-aip
-```
-
-
-### 2. Open in VS Code
-```bash
-code .
-```
-
-### 3. Reopen in Container
-When VS Code opens, you should see a notification asking if you want to "Reopen in Container":
-- Click **Reopen in Container**
-
-If you don't see the notification:
-- Press `Cmd+Shift+P` to open the Command Palette
-- Type "Dev Containers: Reopen in Container"
-- Press Enter
-
-### 4. Wait for Initial Setup
-The first time you open the container, it will take **10-15 minutes** to:
-- Build the Docker container
-- Set up the Python environment
-- Install all dependencies
-- Install Ollama
-- Download required AI models
-
-You can monitor progress in the VS Code terminal.
+If this doesn't work for some reason, an alternative approach to opening the code in VS Code is detailed [here](#alternative-approach-to-open-in-vs-code). There is also a troubleshooting section [here](#troubleshooting).
 
 
 
-## Troubleshooting
 
-### Docker Desktop Not Running
-If you see "Docker is not running" errors:
-- Check that Docker Desktop is running (whale icon in menu bar)
-- Try restarting Docker Desktop
-- Ensure you've completed the Docker Desktop setup wizard
 
-### Container Build Fails
-- Ensure you have enough disk space (32GB minimum free)
-- Check Docker Desktop has sufficient resources allocated:
-  - Open Docker Desktop → Settings → Resources
-  - Ensure at least 4 CPUs and 8GB memory are allocated
 
-### Ollama Models Not Downloaded
-If models are missing:
-```bash
-ollama pull llama3.2:latest
-ollama pull nomic-embed-text
-```
-
-### Port Already in Use
-If you see port conflict errors:
-- Check what's using the port: `lsof -i :PORT_NUMBER`
-- Stop the conflicting service or change the port in `.devcontainer/devcontainer.json`
 
 ## Next Steps
 
-Once setup is complete, you're ready to start the workshop! Refer to the main [README.md](README.md) for lab instructions.
+Once setup is complete, you're ready to start the workshop! Refer to the main [labs.md file](labs.md) for lab instructions.
 
 ## Stopping the Container
 
@@ -147,6 +93,69 @@ You can either open it in a separate browser instance or open it in the codespac
 
 ---
 
+## Alternative Approach to open in VS Code
+
+### 1. Clone the Repository
+Open Terminal and run:
+```bash
+git clone https://github.com/skilldevai/ae-day2.git
+cd ai-aip
+```
+
+
+### 2. Open in VS Code
+```bash
+code .
+```
+
+### 3. Reopen in Container
+When VS Code opens, you should see a notification asking if you want to "Reopen in Container":
+- Click **Reopen in Container**
+
+If you don't see the notification:
+- Press `Cmd+Shift+P` to open the Command Palette
+- Type "Dev Containers: Reopen in Container"
+- Press Enter
+
+### 4. Wait for Initial Setup
+The first time you open the container, it will take **10-15 minutes** to:
+- Build the Docker container
+- Set up the Python environment
+- Install all dependencies
+- Install Ollama
+- Download required AI models
+
+You can monitor progress in the VS Code terminal.
+
+---
+
+## Troubleshooting
+
+### Docker Desktop Not Running
+If you see "Docker is not running" errors:
+- Check that Docker Desktop is running (whale icon in menu bar)
+- Try restarting Docker Desktop
+- Ensure you've completed the Docker Desktop setup wizard
+
+### Container Build Fails
+- Ensure you have enough disk space (32GB minimum free)
+- Check Docker Desktop has sufficient resources allocated:
+  - Open Docker Desktop → Settings → Resources
+  - Ensure at least 4 CPUs and 8GB memory are allocated
+
+### Ollama Models Not Downloaded
+If models are missing:
+```bash
+ollama pull llama3.2:latest
+ollama pull nomic-embed-text
+```
+
+### Port Already in Use
+If you see port conflict errors:
+- Check what's using the port: `lsof -i :PORT_NUMBER`
+- Stop the conflicting service or change the port in `.devcontainer/devcontainer.json`
+
+---
 ## License and Use
 
 These materials are provided as part of the **Applied AI Engineering for the Enterprise** conducted by **TechUpSkills (Brent Laster)**.
