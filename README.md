@@ -114,7 +114,7 @@ You can either open it in a separate browser instance or open it in the codespac
 
 <br><br>
 
-# Prerequisites
+## Prerequisites
 
 ### System Requirements
 - macOS (Intel or Apple Silicon)
