@@ -5,6 +5,7 @@
 These instructions will guide you through running the container environment locally in a VS Code instance using Docker Desktop. If you instead need/want a GitHub Codespaces environment, see [README-codespaces.md](./README-codespaces.md) in this repository. 
 
 <br><br>
+# Steps
 
 **1. First, ensure you have the prerequisites list under the [Prerequisites](#prerequisites) section installed and running on your system.**
 
@@ -45,6 +46,9 @@ You can either open it in a separate browser instance or open it in the codespac
 <br><br>
 
 **Now, you are ready for the labs!**
+
+---
+---
 
 <br><br>
 
