@@ -8,6 +8,7 @@ These instructions will guide you through running the container environment loca
 
 **1. First, ensure you have the prerequisites list under the [Prerequisites](#prerequisites) section installed and running on your system.**
 
+<br><br>
 
 **2. Click on the button below to open the code from this repository as a development container in your local VS Code instance.**
 
@@ -18,9 +19,11 @@ Click here ➡️
        height="96">
 </a>
 
-If this doesn't work for some reason, an alternative approach to opening the code in VS Code is detailed [here](#alternative-approach-to-open-in-vs-code). There is also a troubleshooting section [here](#troubleshooting).
+If this doesn't work for some reason, an alternative approach to opening the code in VS Code is detailed [here](#alternative-approach-to-open-in-vs-code). There is also a [troubleshooting section](#troubleshooting) you can reference if you run into problems.
 
-This will run for a long time (up to 10 minutes) while it gets everything ready.
+<br><br>
+
+**3. This will run for a long time (up to 10 minutes) while it gets everything ready.**
 
 After the initial startup, it will run a script to setup the python environment and install needed python pieces. This will take several more minutes to run. It will look like this while this is running.
 
@@ -39,7 +42,7 @@ You can either open it in a separate browser instance or open it in the codespac
 
 ![Opening labs](./images/aia-0-4.png?raw=true "Opening labs")
 
-<br>
+<br><br>
 
 **Now, you are ready for the labs!**
 
