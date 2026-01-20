@@ -11,29 +11,14 @@ These instructions will guide you through running the container environment loca
 
 **2. Click on the button below to open the code from this repository as a development container in your local VS Code instance.**
 
-Click here ➡️ [![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2)
+Click here ➡️ 
+<a href="https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2">
+  <img src="https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&style=for-the-badge"
+       alt="Open in Dev Containers"
+       height="96">
+</a>
 
 If this doesn't work for some reason, an alternative approach to opening the code in VS Code is detailed [here](#alternative-approach-to-open-in-vs-code). There is also a troubleshooting section [here](#troubleshooting).
-
-
-
-
-
-
-
-## Next Steps
-
-Once setup is complete, you're ready to start the workshop! Refer to the main [labs.md file](labs.md) for lab instructions.
-
-## Stopping the Container
-
-When you're done working:
-- Close VS Code or
-- Press `Cmd+Shift+P` and select "Dev Containers: Reopen Folder Locally"
-
-Docker Desktop can continue running in the background or be quit from the menu bar icon.
-
-![Creating new codespace from button](./images/aia-0-2.png?raw=true "Creating new codespace from button")
 
 This will run for a long time (up to 10 minutes) while it gets everything ready.
 
