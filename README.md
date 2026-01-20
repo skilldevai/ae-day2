@@ -6,35 +6,8 @@ These instructions will guide you through running the container environment loca
 
 <br><br>
 
-**1. First, ensure you have the prerequisites below installed and running on your system.**
-### System Requirements
-- macOS (Intel or Apple Silicon)
-- At least 4 CPU cores
-- 16GB RAM minimum
-- 32GB free disk space
+**1. First, ensure you have the prerequisites list under the [Prerequisites](#prerequisites) section installed and running on your system.**
 
-### Required Software
-
-#### 1. Install Docker Desktop
-- Download from: https://www.docker.com/products/docker-desktop
-- Choose the appropriate version:
-  - **Apple Silicon (M1/M2/M3)**: Download "Mac with Apple chip"
-  - **Intel Mac**: Download "Mac with Intel chip"
-- Install by dragging Docker.app to Applications
-- Launch Docker Desktop and complete the setup
-- Ensure Docker Desktop is running (you'll see the whale icon in your menu bar)
-
-#### 2. Install Visual Studio Code
-- Download from: https://code.visualstudio.com/
-- Open the downloaded .zip file
-- Drag Visual Studio Code to your Applications folder
-- Launch VS Code
-
-#### 3. Install Dev Containers Extension
-- Open VS Code
-- Press `Cmd+Shift+X` to open Extensions
-- Search for "Dev Containers" (published by Microsoft)
-- Click **Install**
 
 ## Setup Steps
 
@@ -141,7 +114,36 @@ You can either open it in a separate browser instance or open it in the codespac
 
 <br><br>
 
+# Prerequisites
 
+### System Requirements
+- macOS (Intel or Apple Silicon)
+- At least 4 CPU cores
+- 16GB RAM minimum
+- 32GB free disk space
+
+### Required Software
+
+#### 1. Install Docker Desktop
+- Download from: https://www.docker.com/products/docker-desktop
+- Choose the appropriate version:
+  - **Apple Silicon (M1/M2/M3)**: Download "Mac with Apple chip"
+  - **Intel Mac**: Download "Mac with Intel chip"
+- Install by dragging Docker.app to Applications
+- Launch Docker Desktop and complete the setup
+- Ensure Docker Desktop is running (you'll see the whale icon in your menu bar)
+
+#### 2. Install Visual Studio Code
+- Download from: https://code.visualstudio.com/
+- Open the downloaded .zip file
+- Drag Visual Studio Code to your Applications folder
+- Launch VS Code
+
+#### 3. Install Dev Containers Extension
+- Open VS Code
+- Press `Cmd+Shift+X` to open Extensions
+- Search for "Dev Containers" (published by Microsoft)
+- Click **Install**
 
 ---
 
