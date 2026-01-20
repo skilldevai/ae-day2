@@ -13,12 +13,15 @@ These instructions will guide you through running the container environment loca
 
 **2. Click on the button below to open the code from this repository as a development container in your local VS Code instance.**
 
-Click here ➡️ 
+<br>
+
+&emsp;&emsp;&emsp;&emsp;Click here ➡️ 
 <a href="https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/skilldevai/ae-day2">
   <img src="https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&style=for-the-badge"
-       alt="Open in Dev Containers"
-       height="96">
-</a>
+       alt="Open in Dev Containers" height="48">    
+</a>     
+
+<br>
 
 If this doesn't work for some reason, an alternative approach to opening the code in VS Code is detailed [here](#alternative-approach-to-open-in-vs-code). There is also a [troubleshooting section](#troubleshooting) you can reference if you run into problems.
 
