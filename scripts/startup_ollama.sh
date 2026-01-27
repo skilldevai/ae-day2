@@ -1,3 +1,7 @@
+
+#!/bin/bash
+# startup_ollama.sh - Start and warm up Ollama for lab exercises
+
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -25,43 +29,82 @@ install_zstd() {
   fi
 }
 
-install_zstd
+echo "========================================"
+echo "Ollama Startup & Warmup Script"
+echo "========================================"
+echo ""
 
-# ---- Install Ollama ----
-echo "Installing Ollama..."
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Confirm binary is available
-if ! command -v ollama >/dev/null 2>&1; then
-  echo "ERROR: ollama is still not on PATH after install."
-  echo "Try: ls -l /usr/local/bin/ollama && echo \$PATH"
-  exit 1
+# Step 1: Check and install Ollama if needed
+echo "Step 1: Checking for Ollama installation..."
+if command -v ollama &> /dev/null; then
+    echo "✓ Ollama is already installed"
+else
+    echo "  Installing Ollama..."
+    install_zstd
+    curl -fsSL https://ollama.com/install.sh | sh
+    echo "✓ Ollama installed"
 fi
+echo ""
 
-# ---- Start server ----
-ollama serve >/tmp/ollama-serve.log 2>&1 &
-pid=$!
+# Step 2: Start Ollama service
+echo "Step 2: Starting Ollama service..."
+ollama serve > /dev/null 2>&1 &
+OLLAMA_PID=$!
+echo "✓ Ollama started (PID: $OLLAMA_PID)"
+echo ""
 
-# Wait for Ollama API to be reachable (default localhost:11434)
-for _ in {1..300}; do
-  if curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
-    break
-  fi
-  sleep 0.1
+# Wait for Ollama to be ready
+echo "Step 3: Waiting for Ollama to be ready..."
+sleep 3
+until curl -s http://localhost:11434/api/tags > /dev/null 2>&1; do
+    echo "  Waiting for Ollama server..."
+    sleep 1
 done
+echo "✓ Ollama server is ready"
+echo ""
 
-# Sanity check
-if ! curl -fsS http://127.0.0.1:11434/api/tags >/dev/null 2>&1; then
-  echo "ERROR: ollama server did not start. Log:"
-  tail -n 200 /tmp/ollama-serve.log || true
-  kill "$pid" >/dev/null 2>&1 || true
-  exit 1
+# Step 4: Pull llama3.2:3b model if not present
+echo "Step 4: Checking for llama3.2:3b model..."
+if ollama list | grep -q "llama3.2:3b"; then
+    echo "✓ llama3.2:3b model already present"
+else
+    echo "  Pulling llama3.2 models (this may take a few minutes)..."
+    ollama pull llama3.2:3b
+    ollama pull llama3.2:latest
+    ollama pull llama3:8b
+    echo "✓ llama3.2 models downloaded"
 fi
+echo ""
 
-# ---- Pull model(s) ----
-ollama pull llama3.2
+# Step 5: Display status
+echo "========================================"
+echo "Status: Ollama Ready for Labs"
+echo "========================================"
+echo ""
+echo "Available models:"
 ollama list
+echo ""
+echo "Ollama API endpoint: http://localhost:11434"
+echo "Ollama PID: $OLLAMA_PID"
+echo ""
 
-# ---- Stop server ----
-kill "$pid" >/dev/null 2>&1 || true
-wait "$pid" 2>/dev/null || true
+echo ""
+echo "To stop Ollama later, run:"
+echo "  kill $OLLAMA_PID"
+echo "  or use: pkill ollama"
+echo ""
+
+# Step 7: Stop Ollama process to allow postAttach command to restart it
+echo "Stopping Ollama process ($OLLAMA_PID) so it can be managed by postAttach in devcontainer.json..."
+kill $OLLAMA_PID
+sleep 1
+if ps -p $OLLAMA_PID > /dev/null 2>&1; then
+    echo "  Ollama did not exit cleanly, forcing kill..."
+    kill -9 $OLLAMA_PID
+else
+    echo "✓ Ollama process stopped"
+fi
+echo ""
+
+echo "Ready for lab exercises! (Ollama will be started automatically by devcontainer postAttach)"
+echo "========================================"

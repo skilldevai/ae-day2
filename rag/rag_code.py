@@ -23,6 +23,8 @@ logger = logging.getLogger("rag-system")
 # Configuration
 # ═══════════════════════════════════════════════════════════════════
 
+OLLAMA_API_URL = "http://localhost:11434/api/generate"
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:1b")
 
 class RAGSystem:
     """Complete RAG system with retrieval and generation"""

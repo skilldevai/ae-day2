@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 1.10 - 01/19/26
+## Revision 2.0 - 01/27/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -614,281 +614,347 @@ Notice how the system should say it doesn't have that information (rather than m
 </p>
 </br></br>
 
-**Lab 8 - Graph RAG**
+**Lab 8 - RAG Evaluation and Quality Metrics**
 
-**Purpose: In this lab, we'll see how Graph RAG works via leveraging frameworks and using LLMs to help generate queries.**
+**Purpose: In this lab, we'll learn how to evaluate RAG system quality - a critical concern for enterprise deployments where accuracy, reliability, and answer traceability are paramount.**
 
-1. To do this lab, first we need a neo4j instance running to manage the graph database. We'll use a docker image for this that is already populated with data for us. Change to the neo4j directory, set an environment variable for the DOCKER version and run the script with the "2" parameter. This will take a few minutes to build and start. Be sure to add the "&" to run this in the background.
-
-(When it is ready, you may see a "*INFO  [neo4j/########] successfully initialized:*" message or one that says "naming to docker.io/library/neo4j:custom".) Just hit *Enter* and you can change back to the *workspaces/ae-day2* subdirectory. 
+1. You should still be in the *rag* subdirectory. We're going to build a RAG evaluation system that measures retrieval quality, answer accuracy, and detects potential hallucinations. First, let's examine our evaluation implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
 
 ```
-cd /workspaces/ae-day2/neo4j
+code -d ../extra/lab8_eval_complete.txt lab8.py
+```
 
-export DOCKER_API_VERSION=1.43
-
-./neo4j-setup.sh 2 &
-
-cd ..
-``` 
+![diff](./images/arag22.png?raw=true "diff")
 
 <br><br>
 
-2. This graph database is prepopulated with a large set of nodes and relationships related to movies. This includes actors and directors associated with movies, as well as the movie's genre, imdb rating, etc. You can take a look at the graph nodes by running the following commands in the terminal. **You should be in the "root" directory (/workspaces/ae-day2) when you run these commands.**
-
-```
-npm i -g http-server
-http-server
-```
-
-<br><br>
-
-3. Go to a web browser and open [http://localhost:8080/index.html](http://localhost:8080/index.html) After a moment, you should see a pop-up dialog that you can click on to open a browser to see some of the nodes in the graph. It will take a minute or two to load and then you can zoom in by using your mouse (roll wheel) to see more details.
-
-![loading nodes](./images/ae22.png?raw=true "loading nodes")
-![graph nodes](./images/ae23.png?raw=true "graph nodes")
-
+2. Once you have the diff view open, take a moment to look at the structure in the complete version on the left. Notice the key evaluation metrics:
+   - **Context Relevance**: How relevant are retrieved chunks to the question?
+   - **Answer Groundedness**: Is the answer supported by the context?
+   - **Answer Completeness**: Does the answer address all parts of the question?
+   - **Hallucination Detection**: Is the LLM making unsupported claims?
 
 <br><br>
 
-4. When done, you can stop the *http-server* process with *Ctrl-C*. Now, let's go back and create a file to use the langchain pieces and the llm to query our graph database. Change back to the *genai* directory and create a new file named lab5.py.
-```
-cd ../rag
-code lab8.py
-```
+3. Now, merge the code segments from the complete file (left side) into the skeleton file (right side) by clicking the arrow pointing right in the middle bar for each difference. Start with the docstrings and comments at the top, then work your way down through the evaluation methods.
 
 <br><br>
 
-5. First, add the imports from *langchain* that we need. Put the following lines in the file you just created.
-```
-import subprocess
-
-from langchain_neo4j import Neo4jGraph, GraphCypherQAChain
-from langchain_ollama import OllamaLLM
-```
+4. After merging all the changes, double-check that there are no remaining diffs (red blocks on the side). Then close the diff view by clicking the "X" in the tab.
 
 <br><br>
 
-6. Now, let's add the connection to the graph database, including dynamically getting the container IP. Add the following to the file.
-```
-# Dynamically get Neo4j container IP
-def get_neo4j_url():
-    try:
-        result = subprocess.run(
-            ["docker", "inspect", "-f", "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}", "neo4j"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        container_ip = result.stdout.strip()
-        if container_ip:
-            return f"bolt://{container_ip}:7687"
-    except subprocess.CalledProcessError:
-        pass
+5. Now let's run our RAG evaluation system:
 
-    # Fallback to localhost
-    return "bolt://localhost:7687"
-
-graph = Neo4jGraph(
-    url=get_neo4j_url(),
-    username="neo4j",
-    password="neo4jtest",
-    enhanced_schema=False,
-)
-```
-
-<br><br>
-
-
-7. Next, let's create the chain instance that will allow us to leverage the LLM to help create the Cypher query and help frame the answer so it makes sense. We'll use Ollama and our llama3 model for both the LLM to create the Cypher queries and the LLM to help frame the answers.
-```
-chain = GraphCypherQAChain.from_llm(
-    cypher_llm=OllamaLLM(model="llama3.2:latest", temperature=0),
-    qa_llm=OllamaLLM(model="llama3.2:latest", temperature=0),
-    graph=graph,
-    verbose=True,
-    allow_dangerous_requests=True,
-)
-```
-
-<br><br>
-
-8. Finally, let's add the code loop to take in a query and invoke the chain. After you've added this code, save the file.
-```
-while True:
-    query = input("\nQuery: ")
-    if query == "exit":
-        break
-    if query.strip() == "":
-        continue
-    response = chain.invoke({"query": query})
-    print(response["result"])
-```
-
-<br><br>
-
-9. Now, run the code.
 ```
 python lab8.py
 ```
 
+The system will connect to the vector database we created earlier and present you with options.
+
 <br><br>
 
-10. You can prompt it with queries related to the info in the graph database, like:
+6. You should see a menu with options to evaluate a single question or run a full test suite. Select option **1** to evaluate a single question. Enter a question like:
+
 ```
-Who starred in Star Trek : Generations?
-Which movies are comedies?
+How do I reset my password?
 ```
 
-![querying the graph](./images/ae24.png?raw=true "querying the graph")
+![question](./images/arag25.png?raw=true "question")
+
+<br><br>
+
+7. Watch the evaluation process - the system will:
+   - **[1/5]** Retrieve relevant context chunks
+   - **[2/5]** Generate an answer using the LLM
+   - **[3/5]** Evaluate context relevance (LLM-as-judge)
+   - **[4/5]** Check answer groundedness (is it supported by context?)
+   - **[5/5]** Assess answer completeness
+
+<br><br>
+
+8. After evaluation, you'll see color-coded scores:
+   - **GREEN (0.8+)**: Excellent quality
+   - **YELLOW (0.6-0.8)**: Acceptable, room for improvement
+   - **RED (below 0.6)**: Needs attention
+
+Notice the **OVERALL SCORE** which weights the metrics based on enterprise priorities (groundedness is most important at 40%).
+
+![run](./images/arag24.png?raw=true "run")
+
+<br><br>
+
+9. Here's a few more questions to see how scores vary: (Due to time constraints, it's suggested to pick one.)
+
+```
+What is the return policy for products?
+What are the shipping costs?
+Who is the CEO of OmniTech?
+```
+
+Notice how the last question (about the CEO) should show lower groundedness if that information isn't in the documents.
+
+![run](./images/arag26.png?raw=true "run")
+
+<br><br>
+
+**Steps 10-12 are optional and may take longer than lab time allows.**
+
+<br>
+
+10. Now select option **2** to run the full test suite. This runs evaluation on a predefined set of questions with expected keywords - simulating automated regression testing.
+
+<br><br>
+
+11. After the test suite completes, you'll see aggregate metrics for your entire RAG system. This is how enterprises monitor RAG quality:
+   - Track metrics over time
+   - Set quality thresholds for production readiness
+   - Compare different RAG configurations
 
 
+![system test](./images/arag27.png?raw=true "system test")
+
+<br><br>
+
+12. Discussion Points:
+   - **Why is groundedness critical?** Hallucinated answers can cause real business damage
+   - **LLM-as-judge approach**: Using one LLM to evaluate another LLM's output
+   - **Automated testing**: Test suites enable continuous quality monitoring
+   - **Enterprise compliance**: Evaluation metrics provide audit trails for regulated industries
+
+<br><br>
+
+<br>
 <p align="center">
 <b>[END OF LAB]</b>
 </p>
 </br></br>
 
-**Lab 9 - Hybrid RAG: Semantic Search + Knowledge Graph**
+**Lab 9 - Query Transformation and Re-ranking**
 
-**Purpose: In this lab, we'll build a hybrid RAG system that combines semantic search (ChromaDB) with knowledge graph traversal (Neo4j) to get both precision and context in our answers.**
+**Purpose: In this lab, we'll implement advanced retrieval techniques that dramatically improve RAG quality - query transformation (expansion, multi-query, HyDE) and two-stage retrieval with re-ranking.**
 
-1. RAG works because semantic search understands meaning. But for precise facts (timeframes, contacts, relationships), a knowledge graph provides structured answers. Combining both gives us the best of both worlds.
-
-For this lab, a knowledge graph has been pre-built from the OmniTech documents. It contains:
-- **Entities**: Products, Policies, TimeFrames, Contacts, Conditions, Fees, ShippingMethods, Documents
-- **Relationships**: APPLIES_TO, HAS_TIMEFRAME, HANDLES, REQUIRES_CONDITION, HAS_FEE, USES_SHIPPING, CONTAINS
-
-You can view it [here](./neo4j/data3/omnitech_policies.csv) if interested.
-
-<br><br>
-  
-2. First, let's create the Neo4j graph database with the OmniTech knowledge graph. Run the commands (similar to lab 8) below.
+1. You should still be in the *code* subdirectory. We're going to build an advanced RAG system that transforms user queries for better retrieval and re-ranks results for higher precision. Use the diff command to examine the implementation:
 
 ```
-cd /workspaces/ae-day2/neo4j
-./neo4j-setup.sh 3 &
+code -d ../extra/lab9_rerank_complete.txt lab9.py
 ```
 
-Wait for the message indicating Neo4j is ready. The script will:
-- Build a Docker image with the OmniTech schema
-- Start Neo4j container on ports 7474 (web) and 7687 (Bolt)
-- Auto-initialize the knowledge graph via APOC
-
-When done, you will see a message ending with "Then run:    MATCH (n) RETURN count(n);". This is informational and you can just hit *Enter/Return* to get back to the prompt.
-
-![building graph db](./images/ae25.png?raw=true "building graph db")
+![diff and merge](./images/arag28.png?raw=true "diff and merge")
 
 <br><br>
 
-3. Change back to the code directory. Then we'll build out the hybrid RAG system as *lab9.py* with the diff and merge process that we've used before. The second command below will start up the editor session.
-   
-```
-cd /workspaces/ae-day2/rag
-code -d ../extra/lab9-changes.txt lab9.py
-```
-
-![building hybrid code](./images/ae26.png?raw=true "building hybrid code")
+2. Once you have the diff view open, look at the key techniques in the complete version:
+   - **Query Expansion**: Add synonyms and related terms
+   - **Multi-Query**: Generate multiple query variations
+   - **HyDE**: Generate hypothetical answers to search for
+   - **Re-ranking**: Score and reorder retrieved chunks
 
 <br><br>
 
-4. What you'll see here is that most of the merges are comment sections explaining what the code does (plus some for the prompt, etc.). You can review and merge them as we've done before. After looking over the change, hover over the middle section and click the arrow to merge. Continue with this process until there are no more differences. Then click on the "X" in the tab at the top to close and save your changes.
+3. Merge all the code segments from the complete file into the skeleton file, starting from the top. Pay attention to the prompt templates used for each transformation technique.
 
 <br><br>
- 
 
-5. Now let's run the hybrid RAG demo with the command below (in the *code* directory). This will then be waiting for you to type in a query.
+4. After merging, close the diff view. Now let's run the advanced RAG demo:
 
 ```
 python lab9.py
 ```
 
-![running](./images/ae27.png?raw=true "running")
+![run](./images/arag29.png?raw=true "run")
 
 <br><br>
 
-6. Let's try a basic query for the return policy. Type in the query below and hit *Enter/Return*.
+5. You'll see a menu explaining the different retrieval methods. Each has a color code:
+   - **RED (BASIC)**: Standard vector search (baseline)
+   - **YELLOW (EXPANSION)**: Query expanded with synonyms
+   - **GREEN (MULTI-Q)**: Multiple query variations
+   - **CYAN (HYDE)**: Hypothetical document embedding
+   - **MAGENTA (RERANK)**: Two-stage with re-ranking
+
+<br><br>
+
+6. Select option **1** to compare all methods on a query. Enter a short, ambiguous query:
 
 ```
-What is the return window for Pro-Series equipment and who do I contact?
+money back
 ```
 
-![running query](./images/ae29.png?raw=true "running query")
-
-7. Watch the output - the demo asks the same question using three different methods: (Ignore any "onnxruntime" warnings.)
-
-You'll see:
-- **METHOD 1: SEMANTIC** - Finds document chunks with similar meaning
-- **METHOD 2: GRAPH** - Traverses Neo4j relationships via Cypher
-- **METHOD 3: HYBRID** - Combines both for precision + context
-
-Each method shows:
-- What it retrieved (chunks vs graph nodes)
-- The LLM-generated answer based on that context
+This is intentionally vague - notice how the different methods handle vocabulary mismatch (documents might say "refund" or "return" instead of "money back").
 
 <br><br>
 
-You can compare the results:
-
-| Method | What it found | Strength |
-|--------|---------------|----------|
-| SEMANTIC | Document chunks mentioning Pro-Series | Good context, handles vocabulary mismatch |
-| GRAPH | Pro_Series → Pro_Series_Return → 14_Days | Precise facts via Cypher traversal |
-| HYBRID | Graph facts + Document context | Combines both worlds |
-
-![multiple answers](./images/ae28.png?raw=true "multiple answers")
+7. Watch the output as each method processes the query:
+   - **Query Expansion** adds synonyms like "refund", "reimbursement"
+   - **Multi-Query** generates variations like "refund process", "return policy"
+   - **HyDE** generates an ideal answer and searches for similar content
+   - **Re-ranking** retrieves more candidates then scores them precisely
 
 <br><br>
 
-8. Let's try another query that may benefit more from having the graph db involved. Enter the one below.
-   
-```
-Who handles defective items?
-```
+8. Compare the answers from each method. Notice how:
+   - Basic search might miss relevant documents
+   - Expanded queries find more related content
+   - HyDE often finds the most relevant passages
+   - Re-ranking improves precision (relevant docs ranked higher)
+
+![response](./images/arag30.png?raw=true "response")
 
 <br><br>
 
-
-9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information. Also, the *HYBRID* option may outline exceptions.
-
-![2nd query](./images/ae30.png?raw=true "2nd query")
-
-<br><br>
-    
-Notice the `HybridRAG` class connects to both databases:
-- **ChromaDB** for semantic search (lines 46-53)
-- **Neo4j** for graph search (lines 55-67)
-
-<br><br>
-
-10. Discussion Points:
-- **Semantic search** (ChromaDB) understands MEANING - handles "money back" → "refund"
-- **Graph search** (Neo4j) understands STRUCTURE - traverses entity relationships
-- **Cypher queries** navigate: `Product → Policy → TimeFrame → Contact`
-- **Hybrid** combines both: graph precision + semantic context
-- This mirrors production RAG architectures used by enterprises
-
-<br><br>
-
-11. [OPTIONAL] You can also visualize the knowledge graph. Start a local web server:
+9. Now select option **2** to try individual techniques. Choose **3 (HyDE)** and enter:
 
 ```
-cd /workspaces/ae-day2/neo4j/data3/public
-npx http-server
+how long to return
 ```
 
-Click the pop-up to open the browser and see the graph visualization. You can move around using the mouse and also zoom in and out. 
+![response](./images/arag32.png?raw=true "response")
 
-![OmniTech Knowledge Graph](./images/ae31.png?raw=true "OmniTech Knowledge Graph")
+Notice how HyDE generates a hypothetical answer like "Customers may return products within 30 days..." and uses THAT to search - bridging the gap between question-style and answer-style text.
+
+<br><br>
+
+10. Try the **Re-ranking** technique (option 4) with:
+
+```
+shipping options and costs
+```
+
+![response](./images/arag31.png?raw=true "response")
+
+Notice how re-ranking retrieves 6 candidates (2x the final count) and then scores each one's relevance to return only the top 3 most relevant.
 
 <br><br>
 
-**NOTE**: If you can't open the page, you may need to go back to the codespace, go to the *PORTS* tab (next to *TERMINAL*), right-click, and set the *Visibility* field to *Public*. See screenshot below.
+11. Discussion Points:
+   - **Query-document mismatch**: Users ask questions, but documents contain answers
+   - **HyDE insight**: Searching with answer-like text finds answer-containing documents
+   - **Re-ranking trade-off**: More compute for higher precision
+   - **Combining techniques**: Production systems often use multiple approaches
+   - **Enterprise value**: Better retrieval = better answers from same knowledge base
 
-![make port public](./images/ragv2-26.png?raw=true "make port public")
+<p align="center">
+**[END OF LAB]**
+</p>
+</br></br>
 
-After that, refresh the page and try again. You may still have to click through another page to allow access.
+**Lab 10 - Corrective RAG (CRAG)**
+
+**Purpose: In this lab, we'll implement Corrective RAG (CRAG), an advanced technique where the system evaluates its own retrieval quality and takes corrective action when results are insufficient - including falling back to web search.**
+
+1. You should still be in the *code* subdirectory. We're going to build a self-correcting RAG system that "knows when it doesn't know" and takes corrective action. Use the diff command to examine the implementation:
+
+```
+code -d ../extra/lab10_crag_complete.txt lab10.py
+```
 
 <br><br>
+
+2. Once you have the diff view open, look at the CRAG workflow in the complete version:
+   - **Retrieval Grader**: Evaluates relevance of each retrieved document
+   - **Decision Logic**: CORRECT / AMBIGUOUS / INCORRECT based on scores
+   - **Corrective Actions**: Web search fallback, document filtering
+   - **Knowledge Refinement**: Extract only relevant information
+   - **Answer Generation**: Generate with confidence-appropriate prompts
+
+![response](./images/arag33.png?raw=true "response")
+
+<br><br>
+
+3. Merge all the code segments from the complete file into the skeleton file. Pay special attention to the evaluation prompts and decision thresholds.
+
+<br><br>
+
+4. After merging, close the diff view. Now let's run the CRAG demo:
+
+```
+python lab10.py
+```
+
+<br><br>
+
+5. You'll see a menu with options and the CRAG decision legend:
+   - **GREEN (CORRECT)**: High relevance - use retrieved documents
+   - **YELLOW (AMBIGUOUS)**: Partial relevance - refine + supplement with web
+   - **RED (INCORRECT)**: Low relevance - fall back to web search
+
+![run](./images/arag34.png?raw=true "run")
+
+<br><br>
+
+6. Select option **1** to run a CRAG query. First, try a question that SHOULD be in the knowledge base:
+
+```
+What is the return policy for products?
+```
+
+Watch the 6-step CRAG pipeline execute:
+- Retrieves 5 documents (more than typical RAG)
+- Evaluates each document's relevance (0.0-1.0)
+- Makes a decision (likely CORRECT for this query)
+- Uses filtered documents without web search
+- Refines knowledge and generates answer
+
+<br><br>
+
+7. Notice the visual relevance bars showing each document's score. Documents above 0.7 are considered highly relevant (green), 0.4-0.7 are ambiguous (yellow), and below 0.4 are irrelevant (red).
+
+![known](./images/arag35.png?raw=true "known")
+
+<br><br>
+
+8. Now try a question that's likely NOT in the knowledge base:
+
+```
+What is the current stock price of OmniTech?
+```
+
+Watch the system detect low relevance and trigger web search (simulated). This is CRAG in action - it "knows when it doesn't know."
+
+![known](./images/arag36.png?raw=true "known")
+
+<br><br>
+
+9. Now select option **2** to compare CRAG vs Standard RAG on a question. Enter:
+
+```
+How do I contact support for warranty issues?
+```
+
+![known](./images/arag37.png?raw=true "known")
+
+Compare the answers - CRAG should provide a more complete response by intelligently filtering or supplementing the context.
+
+![known](./images/arag38.png?raw=true "known")
+
+<br><br>
+
+10. Try the comparison with a question outside the knowledge base:
+
+```
+What are the latest AI developments in 2026?
+```
+
+![unknown](./images/arag39.png?raw=true "unknown")
+
+Notice how Standard RAG might hallucinate or give a vague answer, while CRAG recognizes the retrieval failure and seeks external information.
+
+<br><br>
+
+12. Discussion Points:
+   - **Self-awareness**: CRAG "knows when it doesn't know" - critical for enterprise trust
+   - **Graceful degradation**: Falls back to external search rather than hallucinating
+   - **Relevance thresholds**: Tunable parameters (0.7/0.4) for your quality requirements
+   - **Audit trail**: CRAGResult tracks every decision for compliance/debugging
+   - **Production patterns**: Real systems use actual web search APIs (Google, Bing, Tavily)
+   - **Cost trade-off**: More LLM calls for evaluation, but better answer quality
+
+<br>
+<p align="center">
+<b>[END OF LAB]</b>
+</p>
+</br></br>
 
 **Key Takeaway:**
 > Semantic search understands MEANING. Graph search understands STRUCTURE. Together they provide comprehensive, accurate answers.

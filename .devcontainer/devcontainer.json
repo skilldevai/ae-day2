@@ -1,6 +1,9 @@
 {
    // "build": { "dockerfile": "Dockerfile" },
     "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+    "remoteEnv": {
+        "OLLAMA_MODEL": "llama3:8b"
+    },
     "hostRequirements": {
        "cpus": 4,
        "memory": "16gb",
@@ -52,5 +55,4 @@
         }
     },
     "postCreateCommand": "bash -i scripts/pysetup.sh py_env && bash -i scripts/startup_ollama.sh",
-    "postAttachCommand": "bash -lc \"ollama serve >/tmp/ollama.log 2>&1 &\""
-}
+    "postAttachCommand": "bash -lc 'pgrep -x ollama >/dev/null || (nohup ollama serve > /workspaces/adv-rag/ollama.log 2>&1 &)'"}
