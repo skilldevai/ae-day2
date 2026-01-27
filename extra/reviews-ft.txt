@@ -20,18 +20,6 @@ import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
 from datasets import load_dataset
 from torch.utils.data import DataLoader
-import os
-from huggingface_hub import login
-
-# Check for Hugging Face token
-hf_token = os.getenv('HF_TOKEN')
-if hf_token:
-    login(token=hf_token)
-    print("✓ Logged in to Hugging Face with environment token")
-elif os.path.exists(os.path.expanduser("~/.cache/huggingface/token")):
-    print("✓ Using cached Hugging Face authentication")
-else:
-    print("⚠️  No HF token found. Set HF_TOKEN environment variable if needed.")
 
 print("="*80)
 print("PRODUCT REVIEW SENTIMENT ANALYSIS FINE-TUNING DEMO")
@@ -52,8 +40,8 @@ print("Using: 1,000 training examples, 200 test examples (5-minute demo)")
 print("Note: Production systems use millions of examples for 95%+ accuracy\n")
 
 # Load Amazon product reviews dataset - using small subset for speed
-train_dataset = load_dataset('amazon_polarity', split='train[:1000]')
-test_dataset = load_dataset('amazon_polarity', split='test[:200]')
+train_dataset = load_dataset('mteb/amazon_polarity', split='train[:1000]')
+test_dataset = load_dataset('mteb/amazon_polarity', split='test[:200]')
 
 print(f"✓ Training examples loaded: {len(train_dataset):,}")
 print(f"✓ Test examples loaded: {len(test_dataset):,}")
@@ -65,10 +53,9 @@ for idx, i in enumerate(sample_indices, 1):
     if i < len(train_dataset):
         example = train_dataset[i]
         sentiment = "Positive ⭐⭐⭐⭐⭐" if example['label'] == 1 else "Negative ⭐"
-        # Show title and truncated content
-        review_text = example['content'][:150] if len(example['content']) > 150 else example['content']
-        print(f"\n{idx}. Product: \"{example['title']}\"")
-        print(f"   Review: \"{review_text}...\"")
+        # Show truncated review text
+        review_text = example['text'][:150] if len(example['text']) > 150 else example['text']
+        print(f"\n{idx}. Review: \"{review_text}...\"")
         print(f"   Customer Sentiment: {sentiment}")
 
 # ============================================================================
@@ -103,9 +90,8 @@ print("Processing reviews with max length of 128 tokens for speed...\n")
 
 def preprocess_function(examples):
     """Convert customer reviews to tokens (numbers) that the model can process."""
-    # Combine title and content for full context
-    texts = [f"{title} {content}" for title, content in zip(examples['title'], examples['content'])]
-    return tokenizer(texts, truncation=True, padding='max_length', max_length=128)
+    # Use the text field directly
+    return tokenizer(examples['text'], truncation=True, padding='max_length', max_length=128)
 
 # Tokenize with progress indication
 print("Tokenizing training reviews...")
@@ -121,9 +107,7 @@ tokenized_train.set_format('torch', columns=['input_ids', 'attention_mask', 'lab
 tokenized_test.set_format('torch', columns=['input_ids', 'attention_mask', 'label'])
 
 # Show tokenization example
-sample_title = test_dataset[0]['title']
-sample_content = test_dataset[0]['content'][:60]
-sample_text = f"{sample_title} {sample_content}"
+sample_text = test_dataset[0]['text'][:100]  # Show first 100 chars
 sample_tokens = tokenizer.tokenize(sample_text)
 print(f"\nTokenization example:")
 print(f"Original text: \"{sample_text}...\"")
@@ -166,8 +150,7 @@ for batch_idx, batch in enumerate(test_dataloader):
     if batch_idx == 0:
         for i in range(min(5, len(predictions))):
             example_predictions.append({
-                'title': test_dataset[i]['title'],
-                'content': test_dataset[i]['content'][:100],
+                'text': test_dataset[i]['text'][:100],
                 'predicted': predictions[i].item(),
                 'actual': labels[i].item(),
                 'correct': predictions[i].item() == labels[i].item()
@@ -184,8 +167,7 @@ for i, pred in enumerate(example_predictions, 1):
     result = "✓ CORRECT" if pred['correct'] else "✗ WRONG"
     
     print(f"\nExample {i}:")
-    print(f"  Product: \"{pred['title']}\"")
-    print(f"  Review: \"{pred['content']}...\"")
+    print(f"  Review: \"{pred['text']}...\"")
     print(f"  Model predicted: {pred_label}")
     print(f"  Actually was: {actual_label}")
     print(f"  Result: {result}")
@@ -267,8 +249,7 @@ for batch_idx, batch in enumerate(test_dataloader):
     if batch_idx == 0:
         for i in range(min(5, len(predictions))):
             example_predictions_after.append({
-                'title': test_dataset[i]['title'],
-                'content': test_dataset[i]['content'][:100],
+                'text': test_dataset[i]['text'][:100],
                 'predicted': predictions[i].item(),
                 'actual': labels[i].item(),
                 'correct': predictions[i].item() == labels[i].item()
@@ -285,8 +266,7 @@ for i, pred in enumerate(example_predictions_after, 1):
     result = "✓ CORRECT" if pred['correct'] else "✗ WRONG"
     
     print(f"\nExample {i}:")
-    print(f"  Product: \"{pred['title']}\"")
-    print(f"  Review: \"{pred['content']}...\"")
+    print(f"  Review: \"{pred['text']}...\"")
     print(f"  Model predicted: {pred_label}")
     print(f"  Actually was: {actual_label}")
     print(f"  Result: {result}")

@@ -72,9 +72,7 @@ tokenized_train.set_format('torch', columns=['input_ids', 'attention_mask', 'lab
 tokenized_test.set_format('torch', columns=['input_ids', 'attention_mask', 'label'])
 
 # Show tokenization example
-sample_title = test_dataset[0]['title']
-sample_content = test_dataset[0]['content'][:60]
-sample_text = f"{sample_title} {sample_content}"
+sample_text = test_dataset[0]['text'][:100]  # Show first 100 chars
 sample_tokens = tokenizer.tokenize(sample_text)
 print(f"\nTokenization example:")
 print(f"Original text: \"{sample_text}...\"")
@@ -108,8 +106,7 @@ for batch_idx, batch in enumerate(test_dataloader):
     if batch_idx == 0:
         for i in range(min(5, len(predictions))):
             example_predictions.append({
-                'title': test_dataset[i]['title'],
-                'content': test_dataset[i]['content'][:100],
+                'text': test_dataset[i]['text'][:100],
                 'predicted': predictions[i].item(),
                 'actual': labels[i].item(),
                 'correct': predictions[i].item() == labels[i].item()
@@ -125,8 +122,7 @@ for i, pred in enumerate(example_predictions, 1):
     result = "✓ CORRECT" if pred['correct'] else "✗ WRONG"
     
     print(f"\nExample {i}:")
-    print(f"  Product: \"{pred['title']}\"")
-    print(f"  Review: \"{pred['content']}...\"")
+    print(f"  Review: \"{pred['text']}...\"")
     print(f"  Model predicted: {pred_label}")
     print(f"  Actually was: {actual_label}")
     print(f"  Result: {result}")
@@ -184,8 +180,7 @@ for batch_idx, batch in enumerate(test_dataloader):
     if batch_idx == 0:
         for i in range(min(5, len(predictions))):
             example_predictions_after.append({
-                'title': test_dataset[i]['title'],
-                'content': test_dataset[i]['content'][:100],
+                'text': test_dataset[i]['text'][:100],
                 'predicted': predictions[i].item(),
                 'actual': labels[i].item(),
                 'correct': predictions[i].item() == labels[i].item()
@@ -201,8 +196,7 @@ for i, pred in enumerate(example_predictions_after, 1):
     result = "✓ CORRECT" if pred['correct'] else "✗ WRONG"
     
     print(f"\nExample {i}:")
-    print(f"  Product: \"{pred['title']}\"")
-    print(f"  Review: \"{pred['content']}...\"")
+    print(f"  Review: \"{pred['text']}...\"")
     print(f"  Model predicted: {pred_label}")
     print(f"  Actually was: {actual_label}")
     print(f"  Result: {result}")
