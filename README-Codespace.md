@@ -40,7 +40,7 @@ When you see this, just hit *Enter* to get to a prompt.
 
 Lab 4 (and our capstone deployment when we get to that) need a free HuggingFace API token. Follow these steps.
 
-A. Go to (https://huggingface.co)[https://huggingface.co] and log in if you already have an account. If you need to create an account, click the *Sign Up* button or visit (https://huggingface.co/join)[https://huggingface.co/join]
+A. Go to [https://huggingface.co](https://huggingface.co) and log in if you already have an account. If you need to create an account, click the *Sign Up* button or visit [https://huggingface.co/join](https://huggingface.co/join)
 
 ![HF login](./images/aia-3-19.png?raw=true "HF login")
 
