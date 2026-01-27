@@ -8,6 +8,10 @@ import torch.nn.functional as F
 from transformers import BertTokenizer, BertModel
 import numpy as np
 import sys
+import warnings
+
+# Suppress warnings about attention implementation
+warnings.filterwarnings("ignore", message=".*sdpa.*output_attentions.*")
 
 def print_header(text):
     """Print a formatted header"""
@@ -306,7 +310,7 @@ def run_interactive_demo():
 
     print("\nLoading BERT model for demonstrations...")
     tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-    model = BertModel.from_pretrained('bert-base-uncased')
+    model = BertModel.from_pretrained('bert-base-uncased', attn_implementation="eager")
     model.eval()
     print("Model loaded!\n")
 
