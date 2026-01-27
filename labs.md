@@ -495,15 +495,11 @@ python ../tools/index_pdfs.py
 
 **Purpose: In this lab, we'll create a complete RAG (Retrieval-Augmented Generation) system that retrieves relevant context from our vector database and uses an LLM to generate intelligent, grounded answers.**
 
-1. You should still be in the *rag* subdirectory. We're going to build a TRUE RAG system that combines vector search with LLM generation. This is different from Lab 6 - instead of just finding similar chunks, we'll use those chunks as context for an LLM to generate complete answers. First, we need to bring down a smaller model to use with these labs. Use the Ollama command below:
-
-```
-ollama pull llama3.2:1b
-```
+1. You should still be in the *rag* subdirectory. We're going to build a TRUE RAG system that combines vector search with LLM generation. 
 
 <br><br>
 
-2. Now let's examine our complete RAG implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
+2. First, let's examine our complete RAG implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
 
 ```
 code -d ../extra/rag_complete.txt rag_code.py
