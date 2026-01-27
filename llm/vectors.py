@@ -1,13 +1,17 @@
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
 import torch
 import sys
+import logging
+
+# Suppress the model loading warnings about unexpected keys
+logging.getLogger("transformers").setLevel(logging.ERROR)
  
 # you can change these values 
 model_name = sys.argv[1]
 max_dims = int(sys.argv[2])
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModel.from_pretrained(model_name)
+model = AutoModel.from_pretrained(model_name, ignore_mismatched_sizes=True)
  
 term1 = str(input("Enter first term: "))
 term2 = str(input("Enter second term: "))
