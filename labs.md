@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 2.0 - 01/27/26
+## Revision 2.1 - 01/27/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -296,19 +296,8 @@ python classification.py
 
 <br><br>
 
-8. Finally, we have a program to do sentiment analysis. The file name is sentiment.py. Open the file either by clicking on [**llm/sentiment.py**](./llm/sentiment.py) or by entering the command below in the codespace's terminal.
 
-```
-code sentiment.py
-```
-
-<br><br>
-
-9. Again, you can look at the model used by this one *distilbert-base-uncased-finetuned-sst-2-english* in Hugging Face.
-
-<br><br>
-
-10. When ready, go ahead and run this one in the similar way and observe which ones it classified as positive and which as negative and the relative scores.
+8. Finally, we have a program to do sentiment analysis - *sentiment.py*. Go ahead and run this one in the similar way and observe which ones it classified as positive and which as negative and the relative scores.
 
 ```
 python sentiment.py
@@ -318,7 +307,15 @@ python sentiment.py
 
 <br><br>
 
-11. If you're done early, feel free to change the texts, the candidate_labels in the previous model, etc. and rerun the models to see the results.
+9. In the LLM directory, we have a program that explains some of the key concepts of how transformers work. You can run it via the command below and move through the different explanations displayed on the screen.
+
+```
+python transformer_explorer.py
+```
+
+![Running transformer explorer](./images/ae87.png?raw=true "Running transformer explorer")
+
+<br><br>
 
 <p align="center">
 <b>[END OF LAB]</b>
