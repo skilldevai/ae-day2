@@ -9,9 +9,12 @@ from transformers import BertTokenizer, BertModel
 import numpy as np
 import sys
 import warnings
+import logging
 
 # Suppress warnings about attention implementation
 warnings.filterwarnings("ignore", message=".*sdpa.*output_attentions.*")
+# Suppress transformer model loading warnings
+logging.getLogger("transformers").setLevel(logging.ERROR)
 
 def print_header(text):
     """Print a formatted header"""
