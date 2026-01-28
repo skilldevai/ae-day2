@@ -969,5 +969,5 @@ Notice how Standard RAG might hallucinate or give a vague answer, while CRAG rec
 </p>
 
 <p align="center">
-<b>(c) 2025 Tech Skills Transformations and Brent C. Laster. All rights reserved.</b>
+<b>(c) 2026 Tech Skills Transformations and Brent C. Laster. All rights reserved.</b>
 </p>
