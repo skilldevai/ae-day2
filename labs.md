@@ -617,7 +617,7 @@ Notice how the system should say it doesn't have that information (rather than m
 code -d ../extra/lab8_eval_complete.txt lab8.py
 ```
 
-![diff](./images/arag22.png?raw=true "diff")
+![diff](./images/ae88.png?raw=true "diff")
 
 <br><br>
 
