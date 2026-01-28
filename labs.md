@@ -645,6 +645,8 @@ python lab8.py
 
 The system will connect to the vector database we created earlier and present you with options.
 
+![options](./images/ae89.png?raw=true "options")
+
 <br><br>
 
 6. You should see a menu with options to evaluate a single question or run a full test suite. Select option **1** to evaluate a single question. Enter a question like:
@@ -653,7 +655,7 @@ The system will connect to the vector database we created earlier and present yo
 How do I reset my password?
 ```
 
-![question](./images/arag25.png?raw=true "question")
+![question](./images/ae90.png?raw=true "question")
 
 <br><br>
 
@@ -733,7 +735,7 @@ Notice how the last question (about the CEO) should show lower groundedness if t
 code -d ../extra/lab9_rerank_complete.txt lab9.py
 ```
 
-![diff and merge](./images/arag28.png?raw=true "diff and merge")
+![diff and merge](./images/ae91.png?raw=true "diff and merge")
 
 <br><br>
 
@@ -755,7 +757,7 @@ code -d ../extra/lab9_rerank_complete.txt lab9.py
 python lab9.py
 ```
 
-![run](./images/arag29.png?raw=true "run")
+![run](./images/ae92.png?raw=true "run")
 
 <br><br>
 
@@ -774,6 +776,8 @@ python lab9.py
 money back
 ```
 
+![run](./images/ae93.png?raw=true "run")
+
 This is intentionally vague - notice how the different methods handle vocabulary mismatch (documents might say "refund" or "return" instead of "money back").
 
 <br><br>
@@ -783,6 +787,8 @@ This is intentionally vague - notice how the different methods handle vocabulary
    - **Multi-Query** generates variations like "refund process", "return policy"
    - **HyDE** generates an ideal answer and searches for similar content
    - **Re-ranking** retrieves more candidates then scores them precisely
+
+![process](./images/ae94.png?raw=true "process")
 
 <br><br>
 
@@ -851,7 +857,7 @@ code -d ../extra/lab10_crag_complete.txt lab10.py
    - **Knowledge Refinement**: Extract only relevant information
    - **Answer Generation**: Generate with confidence-appropriate prompts
 
-![response](./images/arag33.png?raw=true "response")
+![response](./images/ae95.png?raw=true "response")
 
 <br><br>
 
