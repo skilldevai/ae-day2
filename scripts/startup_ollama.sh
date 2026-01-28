@@ -71,7 +71,7 @@ else
     echo "  Pulling llama3.2 models (this may take a few minutes)..."
     ollama pull llama3.2:3b
     ollama pull llama3.2:latest
-    ollama pull llama3:8b
+    ollama pull llama3.2:1b
     echo "✓ llama3.2 models downloaded"
 fi
 echo ""
