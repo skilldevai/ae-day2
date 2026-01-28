@@ -2,7 +2,7 @@
    // "build": { "dockerfile": "Dockerfile" },
     "image": "mcr.microsoft.com/devcontainers/base:bookworm",
     "remoteEnv": {
-        "OLLAMA_MODEL": "llama3:8b"
+        "OLLAMA_MODEL": "llama3.2:3b"
     },
     "hostRequirements": {
        "cpus": 4,
