@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 3.1 - 02/03/26
+## Revision 3.2 - 02/03/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -898,7 +898,7 @@ After that, refresh the page and try again. You may still have to click through 
 1. You should still be in the *rag* subdirectory. We're going to build a RAG evaluation system that measures retrieval quality, answer accuracy, and detects potential hallucinations. First, let's examine our evaluation implementation. We have a completed version and a skeleton version. Use the diff command to see the differences:
 
 ```
-code -d ../extra/lab8_eval_complete.txt lab8.py
+code -d ../extra/lab10_eval_complete.txt lab10.py
 ```
 
 ![diff](./images/ae88.png?raw=true "diff")
@@ -924,7 +924,7 @@ code -d ../extra/lab8_eval_complete.txt lab8.py
 5. Now let's run our RAG evaluation system:
 
 ```
-python lab8.py
+python lab10.py
 ```
 
 The system will connect to the vector database we created earlier and present you with options.
@@ -1016,7 +1016,7 @@ Notice how the last question (about the CEO) should show lower groundedness if t
 1. You should still be in the *code* subdirectory. We're going to build an advanced RAG system that transforms user queries for better retrieval and re-ranks results for higher precision. Use the diff command to examine the implementation:
 
 ```
-code -d ../extra/lab9_rerank_complete.txt lab9.py
+code -d ../extra/lab11_rerank_complete.txt lab11.py
 ```
 
 ![diff and merge](./images/ae91.png?raw=true "diff and merge")
@@ -1038,7 +1038,7 @@ code -d ../extra/lab9_rerank_complete.txt lab9.py
 4. After merging, close the diff view. Now let's run the advanced RAG demo:
 
 ```
-python lab9.py
+python lab11.py
 ```
 
 ![run](./images/ae92.png?raw=true "run")
@@ -1129,7 +1129,7 @@ Notice how re-ranking retrieves 6 candidates (2x the final count) and then score
 1. You should still be in the *code* subdirectory. We're going to build a self-correcting RAG system that "knows when it doesn't know" and takes corrective action. Use the diff command to examine the implementation:
 
 ```
-code -d ../extra/lab10_crag_complete.txt lab10.py
+code -d ../extra/lab12_crag_complete.txt lab12.py
 ```
 
 <br><br>
@@ -1152,7 +1152,7 @@ code -d ../extra/lab10_crag_complete.txt lab10.py
 4. After merging, close the diff view. Now let's run the CRAG demo:
 
 ```
-python lab10.py
+python lab12.py
 ```
 
 <br><br>
