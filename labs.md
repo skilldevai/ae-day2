@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 3.2 - 02/03/26
+## Revision 3.3 - 02/03/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -772,7 +772,7 @@ When done, you will see a message ending with "Then run:    MATCH (n) RETURN cou
 
 <br><br>
 
-3. Change back to the code directory. Then we'll build out the hybrid RAG system as *lab9.py* with the diff and merge process that we've used before. The second command below will start up the editor session.
+3. Change back to the *rag* directory. Then we'll build out the hybrid RAG system as *lab9.py* with the diff and merge process that we've used before. The second command below will start up the editor session.
    
 ```
 cd /workspaces/ae-day2/rag
