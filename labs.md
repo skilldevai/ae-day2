@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 2.1 - 01/27/26
+## Revision 3.0 - 02/03/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -607,7 +607,292 @@ Notice how the system should say it doesn't have that information (rather than m
 </p>
 </br></br>
 
-**Lab 8 - RAG Evaluation and Quality Metrics**
+**Lab 8 - Graph RAG**
+
+**Purpose: In this lab, we'll see how Graph RAG works via leveraging frameworks and using LLMs to help generate queries.**
+
+1. To do this lab, first we need a neo4j instance running to manage the graph database. We'll use a docker image for this that is already populated with data for us. Change to the neo4j directory, set an environment variable for the DOCKER version and run the script with the "2" parameter. This will take a few minutes to build and start. Be sure to add the "&" to run this in the background.
+
+(When it is ready, you may see a "*INFO  [neo4j/########] successfully initialized:*" message or one that says "naming to docker.io/library/neo4j:custom".) Just hit *Enter* and you can change back to the *workspaces/ae-day2* subdirectory. 
+
+```
+cd /workspaces/ae-day2/neo4j
+
+export DOCKER_API_VERSION=1.43
+
+./neo4j-setup.sh 2 &
+
+cd ..
+``` 
+
+<br><br>
+
+2. This graph database is prepopulated with a large set of nodes and relationships related to movies. This includes actors and directors associated with movies, as well as the movie's genre, imdb rating, etc. You can take a look at the graph nodes by running the following commands in the terminal. **You should be in the "root" directory (/workspaces/ae-day2) when you run these commands.**
+
+```
+npm i -g http-server
+http-server
+```
+
+<br><br>
+
+3. Go to a web browser and open [http://localhost:8080/index.html](http://localhost:8080/index.html) After a moment, you should see a pop-up dialog that you can click on to open a browser to see some of the nodes in the graph. It will take a minute or two to load and then you can zoom in by using your mouse (roll wheel) to see more details.
+
+![loading nodes](./images/ae22.png?raw=true "loading nodes")
+![graph nodes](./images/ae23.png?raw=true "graph nodes")
+
+
+<br><br>
+
+4. When done, you can stop the *http-server* process with *Ctrl-C*. Now, let's go back and create a file to use the langchain pieces and the llm to query our graph database. Change back to the *genai* directory and create a new file named lab5.py.
+```
+cd ../rag
+code lab8.py
+```
+
+<br><br>
+
+5. First, add the imports from *langchain* that we need. Put the following lines in the file you just created.
+```
+import subprocess
+
+from langchain_neo4j import Neo4jGraph, GraphCypherQAChain
+from langchain_ollama import OllamaLLM
+```
+
+<br><br>
+
+6. Now, let's add the connection to the graph database, including dynamically getting the container IP. Add the following to the file.
+```
+# Dynamically get Neo4j container IP
+def get_neo4j_url():
+    try:
+        result = subprocess.run(
+            ["docker", "inspect", "-f", "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}", "neo4j"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        container_ip = result.stdout.strip()
+        if container_ip:
+            return f"bolt://{container_ip}:7687"
+    except subprocess.CalledProcessError:
+        pass
+
+    # Fallback to localhost
+    return "bolt://localhost:7687"
+
+graph = Neo4jGraph(
+    url=get_neo4j_url(),
+    username="neo4j",
+    password="neo4jtest",
+    enhanced_schema=False,
+)
+```
+
+<br><br>
+
+
+7. Next, let's create the chain instance that will allow us to leverage the LLM to help create the Cypher query and help frame the answer so it makes sense. We'll use Ollama and our llama3 model for both the LLM to create the Cypher queries and the LLM to help frame the answers.
+```
+chain = GraphCypherQAChain.from_llm(
+    cypher_llm=OllamaLLM(model="llama3.2:latest", temperature=0),
+    qa_llm=OllamaLLM(model="llama3.2:latest", temperature=0),
+    graph=graph,
+    verbose=True,
+    allow_dangerous_requests=True,
+)
+```
+
+<br><br>
+
+8. Finally, let's add the code loop to take in a query and invoke the chain. After you've added this code, save the file.
+```
+while True:
+    query = input("\nQuery: ")
+    if query == "exit":
+        break
+    if query.strip() == "":
+        continue
+    response = chain.invoke({"query": query})
+    print(response["result"])
+```
+
+<br><br>
+
+9. Now, run the code.
+```
+python lab8.py
+```
+
+<br><br>
+
+10. You can prompt it with queries related to the info in the graph database, like:
+```
+Who starred in Star Trek : Generations?
+Which movies are comedies?
+```
+
+![querying the graph](./images/ae24.png?raw=true "querying the graph")
+
+
+<p align="center">
+<b>[END OF LAB]</b>
+</p>
+</br></br>
+
+**Lab 9 - Hybrid RAG: Semantic Search + Knowledge Graph**
+
+**Purpose: In this lab, we'll build a hybrid RAG system that combines semantic search (ChromaDB) with knowledge graph traversal (Neo4j) to get both precision and context in our answers.**
+
+1. RAG works because semantic search understands meaning. But for precise facts (timeframes, contacts, relationships), a knowledge graph provides structured answers. Combining both gives us the best of both worlds.
+
+For this lab, a knowledge graph has been pre-built from the OmniTech documents. It contains:
+- **Entities**: Products, Policies, TimeFrames, Contacts, Conditions, Fees, ShippingMethods, Documents
+- **Relationships**: APPLIES_TO, HAS_TIMEFRAME, HANDLES, REQUIRES_CONDITION, HAS_FEE, USES_SHIPPING, CONTAINS
+
+You can view it [here](./neo4j/data3/omnitech_policies.csv) if interested.
+
+<br><br>
+  
+2. First, let's create the Neo4j graph database with the OmniTech knowledge graph. Run the commands (similar to lab 8) below.
+
+```
+cd /workspaces/ae-day2/neo4j
+./neo4j-setup.sh 3 &
+```
+
+Wait for the message indicating Neo4j is ready. The script will:
+- Build a Docker image with the OmniTech schema
+- Start Neo4j container on ports 7474 (web) and 7687 (Bolt)
+- Auto-initialize the knowledge graph via APOC
+
+When done, you will see a message ending with "Then run:    MATCH (n) RETURN count(n);". This is informational and you can just hit *Enter/Return* to get back to the prompt.
+
+![building graph db](./images/ae25.png?raw=true "building graph db")
+
+<br><br>
+
+3. Change back to the code directory. Then we'll build out the hybrid RAG system as *lab9.py* with the diff and merge process that we've used before. The second command below will start up the editor session.
+   
+```
+cd /workspaces/ae-day2/rag
+code -d ../extra/lab9-changes.txt lab9.py
+```
+
+![building hybrid code](./images/ae26.png?raw=true "building hybrid code")
+
+<br><br>
+
+4. What you'll see here is that most of the merges are comment sections explaining what the code does (plus some for the prompt, etc.). You can review and merge them as we've done before. After looking over the change, hover over the middle section and click the arrow to merge. Continue with this process until there are no more differences. Then click on the "X" in the tab at the top to close and save your changes.
+
+<br><br>
+ 
+
+5. Now let's run the hybrid RAG demo with the command below (in the *code* directory). This will then be waiting for you to type in a query.
+
+```
+python lab9.py
+```
+
+![running](./images/ae27.png?raw=true "running")
+
+<br><br>
+
+6. Let's try a basic query for the return policy. Type in the query below and hit *Enter/Return*.
+
+```
+What is the return window for Pro-Series equipment and who do I contact?
+```
+
+![running query](./images/ae29.png?raw=true "running query")
+
+7. Watch the output - the demo asks the same question using three different methods: (Ignore any "onnxruntime" warnings.)
+
+You'll see:
+- **METHOD 1: SEMANTIC** - Finds document chunks with similar meaning
+- **METHOD 2: GRAPH** - Traverses Neo4j relationships via Cypher
+- **METHOD 3: HYBRID** - Combines both for precision + context
+
+Each method shows:
+- What it retrieved (chunks vs graph nodes)
+- The LLM-generated answer based on that context
+
+<br><br>
+
+You can compare the results:
+
+| Method | What it found | Strength |
+|--------|---------------|----------|
+| SEMANTIC | Document chunks mentioning Pro-Series | Good context, handles vocabulary mismatch |
+| GRAPH | Pro_Series → Pro_Series_Return → 14_Days | Precise facts via Cypher traversal |
+| HYBRID | Graph facts + Document context | Combines both worlds |
+
+![multiple answers](./images/ae28.png?raw=true "multiple answers")
+
+<br><br>
+
+8. Let's try another query that may benefit more from having the graph db involved. Enter the one below.
+   
+```
+Who handles defective items?
+```
+
+<br><br>
+
+
+9. Notice again the variations in the responses. Typically, because of the direct mapping, the *HYBRID* and *GRAPH* responses will have the best information. Also, the *HYBRID* option may outline exceptions.
+
+![2nd query](./images/ae30.png?raw=true "2nd query")
+
+<br><br>
+    
+Notice the `HybridRAG` class connects to both databases:
+- **ChromaDB** for semantic search (lines 46-53)
+- **Neo4j** for graph search (lines 55-67)
+
+<br><br>
+
+10. Discussion Points:
+- **Semantic search** (ChromaDB) understands MEANING - handles "money back" → "refund"
+- **Graph search** (Neo4j) understands STRUCTURE - traverses entity relationships
+- **Cypher queries** navigate: `Product → Policy → TimeFrame → Contact`
+- **Hybrid** combines both: graph precision + semantic context
+- This mirrors production RAG architectures used by enterprises
+
+<br><br>
+
+11. [OPTIONAL] You can also visualize the knowledge graph. Start a local web server:
+
+```
+cd /workspaces/ae-day2/neo4j/data3/public
+npx http-server
+```
+
+Click the pop-up to open the browser and see the graph visualization. You can move around using the mouse and also zoom in and out. 
+
+![OmniTech Knowledge Graph](./images/ae31.png?raw=true "OmniTech Knowledge Graph")
+
+<br><br>
+
+**NOTE**: If you can't open the page, you may need to go back to the codespace, go to the *PORTS* tab (next to *TERMINAL*), right-click, and set the *Visibility* field to *Public*. See screenshot below.
+
+![make port public](./images/ragv2-26.png?raw=true "make port public")
+
+After that, refresh the page and try again. You may still have to click through another page to allow access.
+
+<br><br>
+
+**Key Takeaway:**
+> Semantic search understands MEANING. Graph search understands STRUCTURE. Together they provide comprehensive, accurate answers.
+
+<p align="center">
+<b>[END OF LAB]</b>
+</p>
+</br></br>
+
+
+**Lab 10 - RAG Evaluation and Quality Metrics**
 
 **Purpose: In this lab, we'll learn how to evaluate RAG system quality - a critical concern for enterprise deployments where accuracy, reliability, and answer traceability are paramount.**
 
@@ -725,7 +1010,7 @@ Notice how the last question (about the CEO) should show lower groundedness if t
 </p>
 </br></br>
 
-**Lab 9 - Query Transformation and Re-ranking**
+**Lab 11 - Query Transformation and Re-ranking**
 
 **Purpose: In this lab, we'll implement advanced retrieval techniques that dramatically improve RAG quality - query transformation (expansion, multi-query, HyDE) and two-stage retrieval with re-ranking.**
 
@@ -838,7 +1123,7 @@ Notice how re-ranking retrieves 6 candidates (2x the final count) and then score
 </p>
 </br></br>
 
-**Lab 10 - Corrective RAG (CRAG)**
+**Lab 12 - Corrective RAG (CRAG)**
 
 **Purpose: In this lab, we'll implement Corrective RAG (CRAG), an advanced technique where the system evaluates its own retrieval quality and takes corrective action when results are insufficient - including falling back to web search.**
 
