@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 3.3 - 02/03/26
+## Revision 3.4 - 02/03/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -1015,7 +1015,7 @@ Notice how the last question (about the CEO) should show lower scores but may st
 
 **Purpose: In this lab, we'll implement advanced retrieval techniques that dramatically improve RAG quality - query transformation (expansion, multi-query, HyDE) and two-stage retrieval with re-ranking.**
 
-1. You should still be in the *code* subdirectory. We're going to build an advanced RAG system that transforms user queries for better retrieval and re-ranks results for higher precision. Use the diff command to examine the implementation:
+1. You should still be in the *rag* subdirectory. We're going to build an advanced RAG system that transforms user queries for better retrieval and re-ranks results for higher precision. Use the diff command to examine the implementation:
 
 ```
 code -d ../extra/lab11_rerank_complete.txt lab11.py
