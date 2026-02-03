@@ -903,7 +903,7 @@ After that, refresh the page and try again. You may still have to click through 
 code -d ../extra/lab10_eval_complete.txt lab10.py
 ```
 
-![diff](./images/ae88.png?raw=true "diff")
+![diff](./images/ae157.png?raw=true "diff")
 
 <br><br>
 
@@ -1021,7 +1021,7 @@ Notice how the last question (about the CEO) should show lower scores but may st
 code -d ../extra/lab11_rerank_complete.txt lab11.py
 ```
 
-![diff and merge](./images/ae91.png?raw=true "diff and merge")
+![diff and merge](./images/ae158.png?raw=true "diff and merge")
 
 <br><br>
 
@@ -1043,7 +1043,7 @@ code -d ../extra/lab11_rerank_complete.txt lab11.py
 python lab11.py
 ```
 
-![run](./images/ae92.png?raw=true "run")
+![run](./images/ae159.png?raw=true "run")
 
 <br><br>
 
@@ -1143,7 +1143,7 @@ code -d ../extra/lab12_crag_complete.txt lab12.py
    - **Knowledge Refinement**: Extract only relevant information
    - **Answer Generation**: Generate with confidence-appropriate prompts
 
-![response](./images/ae95.png?raw=true "response")
+![response](./images/ae160.png?raw=true "response")
 
 <br><br>
 
@@ -1197,7 +1197,7 @@ What is the current stock price of OmniTech?
 
 Watch the system detect low relevance and trigger web search (simulated). This is CRAG in action - it "knows when it doesn't know."
 
-![known](./images/arag36.png?raw=true "known")
+![known](./images/ae161.png?raw=true "known")
 
 <br><br>
 
