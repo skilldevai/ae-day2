@@ -785,6 +785,8 @@ code -d ../extra/lab9-changes.txt lab9.py
 
 4. What you'll see here is that most of the merges are comment sections explaining what the code does (plus some for the prompt, etc.). You can review and merge them as we've done before. After looking over the change, hover over the middle section and click the arrow to merge. Continue with this process until there are no more differences. Then click on the "X" in the tab at the top to close and save your changes.
 
+**NOTE: This code uses *QUERY ROUTING* (around line 358) to route to different Cypher queries based on keywords (e.g. "Pro-Series").**
+
 <br><br>
  
 
