@@ -727,13 +727,12 @@ python lab8.py
 
 <br><br>
 
-10. You can prompt it with queries related to the info in the graph database, like:
+10. You can prompt it with queries related to the info in the graph database, like below. (Notes: Actual output length may be limited by the framework. Because of the small model we are using, other queries may or may not work well.)
 ```
-Who starred in Star Trek : Generations?
 Which movies are comedies?
 ```
 
-![querying the graph](./images/ae24.png?raw=true "querying the graph")
+![querying the graph](./images/ae156.png?raw=true "querying the graph")
 
 
 <p align="center">
