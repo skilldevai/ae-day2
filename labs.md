@@ -965,7 +965,7 @@ Notice the **OVERALL SCORE** which weights the metrics based on enterprise prior
 
 <br><br>
 
-9. Here's a few more questions to see how scores vary: (Due to time constraints, it's suggested to pick one.)
+9. Here's a few more questions to see how scores vary: 
 
 ```
 What is the return policy for products?
@@ -973,7 +973,7 @@ What are the shipping costs?
 Who is the CEO of OmniTech?
 ```
 
-Notice how the last question (about the CEO) should show lower groundedness if that information isn't in the documents.
+Notice how the last question (about the CEO) should show lower scores but may still show high groundedness if that information isn't in the documents and it recognizes that the information isn't in the sources.
 
 ![run](./images/arag26.png?raw=true "run")
 
