@@ -1,7 +1,7 @@
 # Applied AI Engineering for the Enterprise
 ## Day 2 - Models and Retrieval Augmented Generation (RAG)
 ## Session labs 
-## Revision 3.4 - 02/03/26
+## Revision 3.5 - 02/10/26
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
 
@@ -703,6 +703,8 @@ chain = GraphCypherQAChain.from_llm(
     allow_dangerous_requests=True,
 )
 ```
+
+*NOTE: If you're wondering about the `allow_dangerous_requests=True` setting, that's an *opt-in* we have to do because the LLM is generating Cypher queries against our graph database. In theory, it could generate something that was destructive or would modify it in a way we didn't want. For real, production use, we would make sure there was read-only access/user, but for our simple case here, it's ok.*
 
 <br><br>
 
