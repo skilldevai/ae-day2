@@ -646,7 +646,7 @@ http-server
 
 4. When done, you can stop the *http-server* process with *Ctrl-C*. Now, let's go back and create a file to use the langchain pieces and the llm to query our graph database. Change back to the *genai* directory and create a new file named lab8.py.
 ```
-cd ../rag
+cd rag
 code lab8.py
 ```
 
